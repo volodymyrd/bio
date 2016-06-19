@@ -6,10 +6,9 @@
 */build/*
 */bin/*
 */.gitignore
-node_modules
-.sass-cache
 .idea/
 classes/
 nimble-cli/*.log
 *.log
 .DS_Store
+/release/*

@@ -1,0 +1,52 @@
+apply plugin: 'application'
+
+dependencies {
+    compile project(":javabio-simple")
+    compile libs.log4j
+    compile(libs.spring_shell) {
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
+
+    testCompile libs.test
+}
+
+version = '0.0.1'
+
+jar {
+    def cmd = "git rev-parse --short HEAD"
+    def proc = cmd.execute()
+    ext.revision = proc.text.trim()
+    ext.date = new Date()
+
+    manifest {
+        attributes("Implementation-Version": version + " build: " + ext.revision + " date: " + ext.date)
+    }
+}
+
+mainClassName = "org.springframework.shell.Bootstrap"
+
+gradle.buildFinished { buildResult ->
+
+    if (buildResult.getFailure() != null) {
+        println "build failure - " + buildResult.failure
+    } else {
+        tasks.release.execute()
+    }
+}
+
+task release {
+    doLast {
+        println "Start 'release task'...'"
+        tasks.distCopy.execute()
+        println "Finished 'release task'...'"
+    }
+}
+
+task distCopy(type: Copy) {
+    def dirName = '../release'
+    file(dirName).list().each {
+        f -> delete "${dirName}/${f}"
+    }
+    from('target/install') into(dirName)
+    from('target/distributions') into(dirName)
+}
