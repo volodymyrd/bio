@@ -6,7 +6,8 @@ subprojects {
             junit : '4.12',
             slf4j: '1.7.21',
             log4j: '1.2.17',
-            spring_shell: '1.2.0.M1'
+            spring_shell: '1.2.0.M1',
+            aspectj: '1.8.9'
         ]
 
         libs = [:]
@@ -18,6 +19,8 @@ subprojects {
                       "log4j:log4j:${versions.log4j}"]
 
         libs.spring_shell = ["org.springframework.shell:spring-shell:${versions.spring_shell}"]
+
+        libs.aspectj = ["org.aspectj:aspectjrt:${versions.aspectj}", "org.aspectj:aspectjweaver:${versions.aspectj}"]
     }
 
     // Configuring java

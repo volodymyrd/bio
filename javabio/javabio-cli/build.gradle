@@ -6,6 +6,7 @@ dependencies {
     compile(libs.spring_shell) {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
+    //compile libs.aspectj
 
     testCompile libs.test
 }

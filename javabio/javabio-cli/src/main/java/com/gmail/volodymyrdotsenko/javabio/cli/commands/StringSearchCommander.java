@@ -1,22 +1,24 @@
 package com.gmail.volodymyrdotsenko.javabio.cli.commands;
 
+import com.gmail.volodymyrdotsenko.javabio.cli.utils.FileUtils;
 import com.gmail.volodymyrdotsenko.javabio.simple.SubStringUtils;
-import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 /**
  * Created by Volodymyr Dotsenko on 5/15/16.
  */
 @Component
-public class StringSearchCommander implements CommandMarker {
+public class StringSearchCommander extends BaseCommander {
 
     private static final java.util.logging.Logger LOGGER = HandlerUtils
             .getLogger(StringSearchCommander.class);
 
-    @CliCommand(value = {"pattern count", "pcount"}, help = "Pattern Count")
+    @CliCommand(value = {"patternCount", "pcount"}, help = "Pattern Count")
     public void patternCount(
             @CliOption(key = {"text"}, mandatory = false, help = "Text") String text,
             @CliOption(key = {"textFileName"}, mandatory = false, help = "File name contains text") String textFileName,
@@ -37,22 +39,29 @@ public class StringSearchCommander implements CommandMarker {
 
         String t = null, p = null;
 
-        if (!isEmpty(text))
-            t = text;
-        else {
+        t = extractText(text, textFileName);
+        if (isEmpty(t))
+            return;
 
-        }
 
-        if (!isEmpty(pattern))
-            p = pattern;
-        else {
-
-        }
+        p = extractText(pattern, patternFileName);
+        if (isEmpty(p))
+            return;
 
         LOGGER.info("Count: " + SubStringUtils.slideWindowPatternCount(t, p));
     }
 
-    private boolean isEmpty(String text) {
-        return text == null || text.isEmpty() ? true : false;
+    private String extractText(String text, String fileName) {
+        if (!isEmpty(text))
+            return text;
+        else {
+            try {
+                return FileUtils.getStringFromFile(fileName);
+            } catch (IOException e) {
+                LOGGER.severe(e.getMessage());
+
+                return null;
+            }
+        }
     }
 }
