@@ -1,13 +1,11 @@
 package com.gmail.volodymyrdotsenko.javabio.cli.commands;
 
-import com.gmail.volodymyrdotsenko.javabio.cli.utils.FileUtils;
 import com.gmail.volodymyrdotsenko.javabio.simple.SubStringUtils;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.stream.Collectors;
 
 /**
@@ -79,19 +77,5 @@ public class StringSearchCommander extends BaseCommander {
                     .stream().sorted()
                     .map(e -> e.toString())
                     .collect(Collectors.joining(" "));
-    }
-
-    private String extractText(String text, String fileName) {
-        if (!isEmpty(text))
-            return text;
-        else {
-            try {
-                return FileUtils.getStringFromFile(fileName);
-            } catch (IOException e) {
-                LOGGER.severe(e.getMessage());
-
-                return null;
-            }
-        }
     }
 }

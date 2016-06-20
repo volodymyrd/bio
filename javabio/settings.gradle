@@ -1,3 +1,4 @@
 rootProject.name = 'javabio'
 include 'javabio-simple'
 include 'javabio-cli'
+include 'javabio-dna'
