@@ -12,3 +12,4 @@ nimble-cli/*.log
 *.log
 .DS_Store
 /release/*
+/tests/*
