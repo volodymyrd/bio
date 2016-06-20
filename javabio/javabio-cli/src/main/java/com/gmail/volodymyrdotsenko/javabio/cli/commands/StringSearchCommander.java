@@ -8,6 +8,7 @@ import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 /**
  * Created by Volodymyr Dotsenko on 5/15/16.
@@ -49,6 +50,35 @@ public class StringSearchCommander extends BaseCommander {
             return "";
 
         return String.valueOf(SubStringUtils.slideWindowPatternCount(t, p));
+    }
+
+    @CliCommand(value = {"frequentWords", "fwords"}, help = "Frequent Words")
+    public String frequentWords(
+            @CliOption(key = {"text"}, mandatory = false, help = "Text") String text,
+            @CliOption(key = {"textFileName"}, mandatory = false, help = "File name contains text") String textFileName,
+            @CliOption(key = {"l"}, mandatory = true, help = "k-mer length") Integer length,
+            @CliOption(key = {"withCount"}, mandatory = false, help = "Print result with count",
+                    unspecifiedDefaultValue = "false") Boolean withCount) {
+
+        if (isEmpty(text) && isEmpty(textFileName)) {
+            LOGGER.severe("You must set either 'text' or 'textFileName' parameter!");
+
+            return "Wrong input parameters";
+        }
+
+        String t = null;
+
+        t = extractText(text, textFileName);
+        if (isEmpty(t))
+            return "";
+
+        if (withCount)
+            return SubStringUtils.frequentWords(t, length).toString();
+        else
+            return SubStringUtils.frequentWords(t, length).keySet()
+                    .stream().sorted()
+                    .map(e -> e.toString())
+                    .collect(Collectors.joining(" "));
     }
 
     private String extractText(String text, String fileName) {

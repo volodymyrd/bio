@@ -13,4 +13,11 @@ public class SubStringUtilsTest {
     public void testSlideWindowPatternCount() {
         assertEquals(3, SubStringUtils.slideWindowPatternCount("ACAACTATGCATACTATCGGGAACTATCCT", "ACTAT"));
     }
+
+    @Test
+    public void testfrequentWords() {
+        System.out.println();
+        assertEquals("{CATG=2, GCAT=2}",
+                SubStringUtils.frequentWords("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4).toString());
+    }
 }
