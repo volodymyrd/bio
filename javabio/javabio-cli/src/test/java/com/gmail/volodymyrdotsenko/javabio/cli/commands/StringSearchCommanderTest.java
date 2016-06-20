@@ -1,4 +1,4 @@
-package com.gmail;
+package com.gmail.volodymyrdotsenko.javabio.cli.commands;
 
 import org.junit.Test;
 import org.springframework.shell.Bootstrap;
