@@ -1,6 +1,8 @@
 package com.gmail.volodymyrdotsenko.javabio.simple;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -9,8 +11,9 @@ import java.util.stream.Collectors;
  */
 public class SubStringUtils {
 
-    public static int slideWindowPatternCount(String text, String pattern) {
-        int count = 0;
+    public static List<Integer> slideWindowPatternCount(String text, String pattern) {
+        List<Integer> counts = new ArrayList<>();
+
         int n = text.length();
         int k = pattern.length();
         for (int i = 0; i < (n - k); i++) {
@@ -23,11 +26,11 @@ public class SubStringUtils {
             }
 
             if (equal) {
-                count++;
+                counts.add(i);
             }
         }
 
-        return count;
+        return counts;
     }
 
     public static Map<String, Integer> frequentWords(String text, int k) {

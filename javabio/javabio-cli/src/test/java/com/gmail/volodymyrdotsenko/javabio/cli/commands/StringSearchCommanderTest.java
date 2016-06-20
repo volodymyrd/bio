@@ -30,6 +30,13 @@ public class StringSearchCommanderTest {
     }
 
     @Test
+    public void testPatternCounts() {
+        CommandResult cr = shell.executeCommand("patternCount --text GATATATGCATATACTT --pattern ATAT --startingPosition true");
+        assertEquals(true, cr.isSuccess());
+        assertEquals("1 3 9", cr.getResult());
+    }
+
+    @Test
     public void testFrequentWords() {
         CommandResult cr = shell.executeCommand("frequentWords --text ACGTTGCATGTCGCATGATGCATGAGAGCT --l 4");
         assertEquals(true, cr.isSuccess());

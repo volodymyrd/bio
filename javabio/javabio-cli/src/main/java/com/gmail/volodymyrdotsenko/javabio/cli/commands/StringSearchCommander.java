@@ -6,6 +6,7 @@ import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
+import java.io.FileNotFoundException;
 import java.util.stream.Collectors;
 
 /**
@@ -22,7 +23,13 @@ public class StringSearchCommander extends BaseCommander {
             @CliOption(key = {"text"}, mandatory = false, help = "Text") String text,
             @CliOption(key = {"textFileName"}, mandatory = false, help = "File name contains text") String textFileName,
             @CliOption(key = {"pattern"}, mandatory = false, help = "Searching pattern") String pattern,
-            @CliOption(key = {"patternFileName"}, mandatory = false, help = "File name contains pattern") String patternFileName) {
+            @CliOption(key = {"patternFileName"}, mandatory = false, help = "File name contains pattern")
+                    String patternFileName,
+            @CliOption(key = {"startingPosition"}, mandatory = false, help = "Print starting position", unspecifiedDefaultValue = "false")
+                    Boolean startingPosition,
+            @CliOption(key = {"outputFileName"}, mandatory = false,
+                    help = "File name contains starting positions")
+                    String outputFileName) {
 
         if (isEmpty(text) && isEmpty(textFileName)) {
             LOGGER.severe("You must set either 'text' or 'textFileName' parameter!");
@@ -47,7 +54,24 @@ public class StringSearchCommander extends BaseCommander {
         if (isEmpty(p))
             return "";
 
-        return String.valueOf(SubStringUtils.slideWindowPatternCount(t, p));
+        if (startingPosition)
+            if (isEmpty(outputFileName))
+                return String.valueOf(SubStringUtils.slideWindowPatternCount(t, p)
+                        .stream().map(e -> e.toString()).collect(Collectors.joining(" ")));
+            else {
+                try {
+                    saveTextFile(outputFileName, String.valueOf(SubStringUtils.slideWindowPatternCount(t, p)
+                            .stream().map(e -> e.toString()).collect(Collectors.joining(" "))));
+
+                    return "File " + outputFileName + " created!";
+                } catch (FileNotFoundException e) {
+                    LOGGER.severe(e.getMessage());
+                }
+
+                return "Error creating a file";
+            }
+        else
+            return String.valueOf(SubStringUtils.slideWindowPatternCount(t, p).size());
     }
 
     @CliCommand(value = {"frequentWords", "fwords"}, help = "Frequent Words")
