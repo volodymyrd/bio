@@ -19,7 +19,7 @@ public class StringSearchCommander extends BaseCommander {
             .getLogger(StringSearchCommander.class);
 
     @CliCommand(value = {"patternCount", "pcount"}, help = "Pattern Count")
-    public void patternCount(
+    public String patternCount(
             @CliOption(key = {"text"}, mandatory = false, help = "Text") String text,
             @CliOption(key = {"textFileName"}, mandatory = false, help = "File name contains text") String textFileName,
             @CliOption(key = {"pattern"}, mandatory = false, help = "Searching pattern") String pattern,
@@ -28,27 +28,27 @@ public class StringSearchCommander extends BaseCommander {
         if (isEmpty(text) && isEmpty(textFileName)) {
             LOGGER.severe("You must set either 'text' or 'textFileName' parameter!");
 
-            return;
+            return "Wrong input parameters";
         }
 
         if (isEmpty(pattern) && isEmpty(patternFileName)) {
             LOGGER.severe("You must set either 'pattern' or 'patternFileName' parameter!");
 
-            return;
+            return "Wrong input parameters";
         }
 
         String t = null, p = null;
 
         t = extractText(text, textFileName);
         if (isEmpty(t))
-            return;
+            return "";
 
 
         p = extractText(pattern, patternFileName);
         if (isEmpty(p))
-            return;
+            return "";
 
-        LOGGER.info("Count: " + SubStringUtils.slideWindowPatternCount(t, p));
+        return String.valueOf(SubStringUtils.slideWindowPatternCount(t, p));
     }
 
     private String extractText(String text, String fileName) {
