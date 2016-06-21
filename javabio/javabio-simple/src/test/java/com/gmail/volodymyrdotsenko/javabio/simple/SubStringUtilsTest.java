@@ -21,15 +21,19 @@ public class SubStringUtilsTest {
 
     @Test
     public void testFrequentWords() {
-        System.out.println();
         assertEquals("{CATG=3, GCAT=3}",
                 SubStringUtils.frequentWords("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, -1).toString());
     }
 
     @Test
     public void testAllFrequentWords() {
-        System.out.println();
         assertEquals("{ATGA=2, TGCA=2, CATG=3, GCAT=3}",
                 SubStringUtils.frequentWords("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1).toString());
+    }
+
+    @Test
+    public void testGetClump() {
+        System.out.println(SubStringUtils.getClump("CGGACTCGACAGATGTGAAGAACGACAATGTGAAGACTCGACACGACAGAGTGAAGAGAAGAGGAAACATTGTAA",
+                5, 50, 4));
     }
 }
