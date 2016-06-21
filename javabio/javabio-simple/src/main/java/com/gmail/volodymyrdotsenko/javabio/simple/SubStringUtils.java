@@ -33,7 +33,7 @@ public class SubStringUtils {
         return counts;
     }
 
-    public static Map<String, Integer> frequentWords(String text, int k) {
+    public static Map<String, Integer> frequentWords(String text, int k, int greaterThan) {
         Map<String, Integer> frequents = new HashMap<>();
         int max = 0;
         for (int i = 0; i < (text.length() - k); i++) {
@@ -48,9 +48,14 @@ public class SubStringUtils {
             }
         }
 
-        final int m = max;
+        if (greaterThan >= 0) {
+            return frequents.entrySet().stream().filter(e -> e.getValue() > greaterThan)
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        } else {
+            final int m = max;
 
-        return frequents.entrySet().stream().filter(e -> e.getValue() == m)
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+            return frequents.entrySet().stream().filter(e -> e.getValue() == m)
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        }
     }
 }

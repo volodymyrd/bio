@@ -1,5 +1,7 @@
 dependencies {
-    compile libs.biojava
+    compile (libs.biojava){
+        exclude group: 'org.apache.logging.log4j'
+    }
 
     testCompile libs.test
 }

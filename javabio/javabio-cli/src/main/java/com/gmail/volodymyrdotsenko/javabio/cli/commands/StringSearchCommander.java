@@ -78,7 +78,9 @@ public class StringSearchCommander extends BaseCommander {
     public String frequentWords(
             @CliOption(key = {"text"}, mandatory = false, help = "Text") String text,
             @CliOption(key = {"textFileName"}, mandatory = false, help = "File name contains text") String textFileName,
-            @CliOption(key = {"l"}, mandatory = true, help = "k-mer length") Integer length,
+            @CliOption(key = {"kmer"}, mandatory = true, help = "k-mer length") Integer kmer,
+            @CliOption(key = {"frequency"}, mandatory = true,
+                    help = "frequency, if greater or equal 0 will get all with greater this frequency, if less 0 print only with maximum frequency") Integer frequency,
             @CliOption(key = {"withCount"}, mandatory = false, help = "Print result with count",
                     unspecifiedDefaultValue = "false") Boolean withCount) {
 
@@ -95,9 +97,9 @@ public class StringSearchCommander extends BaseCommander {
             return "";
 
         if (withCount)
-            return SubStringUtils.frequentWords(t, length).toString();
+            return SubStringUtils.frequentWords(t, kmer, frequency).toString();
         else
-            return SubStringUtils.frequentWords(t, length).keySet()
+            return SubStringUtils.frequentWords(t, kmer, frequency).keySet()
                     .stream().sorted()
                     .map(e -> e.toString())
                     .collect(Collectors.joining(" "));

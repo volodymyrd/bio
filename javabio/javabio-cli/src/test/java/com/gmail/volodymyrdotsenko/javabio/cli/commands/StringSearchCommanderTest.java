@@ -38,7 +38,7 @@ public class StringSearchCommanderTest {
 
     @Test
     public void testFrequentWords() {
-        CommandResult cr = shell.executeCommand("frequentWords --text ACGTTGCATGTCGCATGATGCATGAGAGCT --l 4");
+        CommandResult cr = shell.executeCommand("frequentWords --text ACGTTGCATGTCGCATGATGCATGAGAGCT --kmer 4 --frequency -1");
         assertEquals(true, cr.isSuccess());
         assertEquals("CATG GCAT", cr.getResult());
     }
