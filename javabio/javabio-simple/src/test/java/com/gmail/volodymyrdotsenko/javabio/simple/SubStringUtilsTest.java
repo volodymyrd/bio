@@ -33,7 +33,29 @@ public class SubStringUtilsTest {
 
     @Test
     public void testGetClump() {
-        System.out.println(SubStringUtils.getClump("CGGACTCGACAGATGTGAAGAACGACAATGTGAAGACTCGACACGACAGAGTGAAGAGAAGAGGAAACATTGTAA",
-                5, 50, 4));
+        assertEquals("{GAAGA=16, CGACA=28}",
+                SubStringUtils.getClump("CGGACTCGACAGATGTGAAGAACGACAATGTGAAGACTCGACACGACAGAGTGAAGAGAAGAGGAAACATTGTAA",
+                5, 50, 4).toString());
+    }
+
+    @Test
+    public void testGetClump2() {
+        assertEquals("{AC=6, CG=2, GA=12}",
+                SubStringUtils.getClump("CGGACTCGACAGATGTG",
+                        2, 10, 2).toString());
+    }
+
+    @Test
+    public void testGetClump_1() {
+        assertEquals("{GAAGA=16, CGACA=28}",
+                SubStringUtils.getClump_1("CGGACTCGACAGATGTGAAGAACGACAATGTGAAGACTCGACACGACAGAGTGAAGAGAAGAGGAAACATTGTAA",
+                        5, 50, 4).toString());
+    }
+
+    @Test
+    public void testGetClump_1_2() {
+        assertEquals("{AC=6, CG=2, GA=12}",
+                SubStringUtils.getClump_1("CGGACTCGACAGATGTG",
+                        2, 10, 2).toString());
     }
 }
