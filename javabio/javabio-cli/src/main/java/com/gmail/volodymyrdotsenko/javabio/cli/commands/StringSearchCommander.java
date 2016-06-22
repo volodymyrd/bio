@@ -7,6 +7,7 @@ import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -96,12 +97,48 @@ public class StringSearchCommander extends BaseCommander {
         if (isEmpty(t))
             return "";
 
+        Map<String, Integer> result = SubStringUtils.frequentWords(t, kmer, frequency);
+
+        LOGGER.info("Number of words: " + result.size());
+
         if (withCount)
-            return SubStringUtils.frequentWords(t, kmer, frequency).toString();
+            return result.toString();
         else
-            return SubStringUtils.frequentWords(t, kmer, frequency).keySet()
-                    .stream().sorted()
-                    .map(e -> e.toString())
-                    .collect(Collectors.joining(" "));
+            return result.keySet().stream().sorted().map(e -> e.toString()).collect(Collectors.joining(" "));
+    }
+
+    @CliCommand(value = {"clump"}, help = "Get clumps in genome")
+    public String clump(
+            @CliOption(key = {"genome"}, mandatory = false, help = "Text") String genome,
+            @CliOption(key = {"genomeFileName"}, mandatory = false, help = "File name contains genome") String genomeFileName,
+            @CliOption(key = {"k"}, mandatory = true, help = "k-mer length") Integer k,
+            @CliOption(key = {"L"}, mandatory = true, help = "k-mer length") Integer L,
+            @CliOption(key = {"t"}, mandatory = true, help = "k-mer length") Integer t,
+            @CliOption(key = {"withCount"}, mandatory = false, help = "Print result with count",
+                    unspecifiedDefaultValue = "false") Boolean withCount) {
+
+        if (isEmpty(genome) && isEmpty(genomeFileName)) {
+            LOGGER.severe("You must set either 'genome' or 'genomeFileName' parameter!");
+
+            return "Wrong input parameters";
+        }
+
+        String g = null;
+
+        g = extractText(genome, genomeFileName);
+        if (isEmpty(g))
+            return "";
+
+        long s = System.nanoTime();
+        Map<String, Integer> result = SubStringUtils.getClump(g, k, L, t);
+        LOGGER.info("Algorithm worked: " + (System.nanoTime() - s) / 1000000.0 + "ms");
+
+        LOGGER.info("Number of clumps: " + result.size());
+
+        if (withCount)
+            return result.entrySet().stream()
+                    .map(e -> e.toString()).collect(Collectors.joining(" "));
+        else
+            return result.keySet().stream().map(e -> e.toString()).collect(Collectors.joining(" "));
     }
 }
