@@ -35,7 +35,7 @@ public class SubStringUtilsTest {
     public void testGetClump() {
         assertEquals("{GAAGA=16, CGACA=28}",
                 SubStringUtils.getClump("CGGACTCGACAGATGTGAAGAACGACAATGTGAAGACTCGACACGACAGAGTGAAGAGAAGAGGAAACATTGTAA",
-                5, 50, 4).toString());
+                        5, 50, 4).toString());
     }
 
     @Test
@@ -49,13 +49,13 @@ public class SubStringUtilsTest {
     public void testGetClump_1() {
         assertEquals("{GAAGA=16, CGACA=28}",
                 SubStringUtils.getClump_1("CGGACTCGACAGATGTGAAGAACGACAATGTGAAGACTCGACACGACAGAGTGAAGAGAAGAGGAAACATTGTAA",
-                        5, 50, 4).toString());
+                        5, 50, 4, true).toString());
     }
 
     @Test
     public void testGetClump_1_2() {
         assertEquals("{AC=6, CG=2, GA=12}",
                 SubStringUtils.getClump_1("CGGACTCGACAGATGTG",
-                        2, 10, 2).toString());
+                        2, 10, 2, true).toString());
     }
 }

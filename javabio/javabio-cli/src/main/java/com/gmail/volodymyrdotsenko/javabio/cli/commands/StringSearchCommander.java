@@ -130,7 +130,7 @@ public class StringSearchCommander extends BaseCommander {
             return "";
 
         long s = System.nanoTime();
-        Map<String, Integer> result = SubStringUtils.getClump(g, k, L, t);
+        Map<String, Integer> result = SubStringUtils.getClump_1(g, k, L, t, withCount);
         LOGGER.info("Algorithm worked: " + (System.nanoTime() - s) / 1000000.0 + "ms");
 
         LOGGER.info("Number of clumps: " + result.size());
