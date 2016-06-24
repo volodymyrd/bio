@@ -7,6 +7,7 @@ import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 
 /**
  * Created by Volodymyr Dotsenko on 6/20/16.
@@ -43,6 +44,42 @@ public class SequencesCommander extends BaseCommander {
         else {
             try {
                 saveTextFile(outputFileName, BioJavaUtil.reverseComplement(t));
+
+                return "File " + outputFileName + " created!";
+            } catch (FileNotFoundException e) {
+                LOGGER.severe(e.getMessage());
+            }
+
+            return "Error creating a file";
+        }
+    }
+
+    @CliCommand(value = {"skew"}, help = "Get skew")
+    public String skew(
+            @CliOption(key = {"sequence"}, mandatory = false, help = "Sequence") String sequence,
+            @CliOption(key = {"sequenceFileName"}, mandatory = false, help = "File name contains sequence")
+                    String sequenceFileName,
+            @CliOption(key = {"outputFileName"}, mandatory = false,
+                    help = "File name contains skew")
+                    String outputFileName) {
+
+        if (isEmpty(sequence) && isEmpty(sequenceFileName)) {
+            LOGGER.severe("You must set either 'sequence' or 'sequenceFileName' parameter!");
+
+            return "Wrong input parameters";
+        }
+
+        String t = null;
+
+        t = extractText(sequence, sequenceFileName);
+        if (isEmpty(t))
+            return "";
+
+        if (isEmpty(outputFileName))
+            return Arrays.toString(BioJavaUtil.skew(t)).replace(",", "");
+        else {
+            try {
+                saveTextFile(outputFileName, Arrays.toString(BioJavaUtil.skew(t)).replace(",", ""));
 
                 return "File " + outputFileName + " created!";
             } catch (FileNotFoundException e) {
