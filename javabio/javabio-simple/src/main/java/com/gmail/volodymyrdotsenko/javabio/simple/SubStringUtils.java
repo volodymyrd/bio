@@ -125,4 +125,28 @@ public class SubStringUtils {
         return frequents.entrySet().parallelStream().filter(e -> e.getValue() == frequency)
                 .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
     }
+
+    public static int hammingDistance(String s1, String s2) {
+        int count = 0;
+        int l = s1.length() <= s2.length() ? s1.length() : s2.length();
+        for (int i = 0; i < l; i++)
+            if (s1.charAt(i) != s2.charAt(i)) {
+                count++;
+            }
+
+        return count;
+    }
+
+    public static List<Integer> approximatePatternMatchingProblem(String text, String pattern, int d) {
+        List<Integer> indexes = new ArrayList<>();
+        int n = text.length();
+        int k = pattern.length();
+        for (int i = 0; i < n - k; i++) {
+            if (hammingDistance(text.substring(i, i + k), pattern) <= d) {
+                indexes.add(i);
+            }
+        }
+
+        return indexes;
+    }
 }

@@ -141,4 +141,11 @@ public class StringSearchCommander extends BaseCommander {
         else
             return result.keySet().stream().map(e -> e.toString()).collect(Collectors.joining(" "));
     }
+
+    @CliCommand(value = {"hammingDistance"}, help = "Calculate Hamming Distance")
+    public int hammingDistance(
+            @CliOption(key = {"text1"}, help = "Text1") String text1,
+            @CliOption(key = {"text2"}, help = "Text2") String text2) {
+        return SubStringUtils.hammingDistance(text1, text2);
+    }
 }

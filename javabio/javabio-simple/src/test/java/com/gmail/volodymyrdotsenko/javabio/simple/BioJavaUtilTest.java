@@ -21,4 +21,10 @@ public class BioJavaUtilTest {
         assertEquals("[0, -1, -1, -1, 0, 1, 2, 1, 1, 1, 0, 1, 2, 1, 0, 0, 0, 0, -1, 0, -1, -2]",
                 Arrays.toString(BioJavaUtil.skew("CATGGGCATCGGCCATACGCC")));
     }
+
+    @Test
+    public void testSkewiMinimums() {
+        assertEquals("[11, 24]",
+                BioJavaUtil.skewMinimums("TAAAGACTGCCGAGAGGCCAACACGAGTGCTAGAACGAGGGGCGTAAACGCGGGTCCGAT").toString());
+    }
 }

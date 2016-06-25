@@ -58,4 +58,16 @@ public class SubStringUtilsTest {
                 SubStringUtils.getClump_1("CGGACTCGACAGATGTG",
                         2, 10, 2, true).toString());
     }
+
+    @Test
+    public void testHammingDistance() {
+        assertEquals(3, SubStringUtils.hammingDistance("GGGCCGTTGGT", "GGACCGTTGAC"));
+    }
+
+    @Test
+    public void testApproximatePatternMatchingProblem() {
+        assertEquals("[6, 7, 26, 27]", SubStringUtils
+                .approximatePatternMatchingProblem("CGCCCGAATCCAGAACGCATTCCCATATTTCGGGACCACTGGCCTCCACGGTACGGACGTCAATCAAAT",
+                        "ATTCTGGA", 3).toString());
+    }
 }

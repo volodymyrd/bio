@@ -54,7 +54,7 @@ public class SequencesCommander extends BaseCommander {
         }
     }
 
-    @CliCommand(value = {"skew"}, help = "Get skew")
+    @CliCommand(value = {"skew sequence"}, help = "Get skew")
     public String skew(
             @CliOption(key = {"sequence"}, mandatory = false, help = "Sequence") String sequence,
             @CliOption(key = {"sequenceFileName"}, mandatory = false, help = "File name contains sequence")
@@ -80,6 +80,42 @@ public class SequencesCommander extends BaseCommander {
         else {
             try {
                 saveTextFile(outputFileName, Arrays.toString(BioJavaUtil.skew(t)).replace(",", ""));
+
+                return "File " + outputFileName + " created!";
+            } catch (FileNotFoundException e) {
+                LOGGER.severe(e.getMessage());
+            }
+
+            return "Error creating a file";
+        }
+    }
+
+    @CliCommand(value = {"skew min"}, help = "Get skew minimums")
+    public String skewMinimums(
+            @CliOption(key = {"sequence"}, mandatory = false, help = "Sequence") String sequence,
+            @CliOption(key = {"sequenceFileName"}, mandatory = false, help = "File name contains sequence")
+                    String sequenceFileName,
+            @CliOption(key = {"outputFileName"}, mandatory = false,
+                    help = "File name contains skew")
+                    String outputFileName) {
+
+        if (isEmpty(sequence) && isEmpty(sequenceFileName)) {
+            LOGGER.severe("You must set either 'sequence' or 'sequenceFileName' parameter!");
+
+            return "Wrong input parameters";
+        }
+
+        String t = null;
+
+        t = extractText(sequence, sequenceFileName);
+        if (isEmpty(t))
+            return "";
+
+        if (isEmpty(outputFileName))
+            return BioJavaUtil.skewMinimums(t).toString().replace(",", "");
+        else {
+            try {
+                saveTextFile(outputFileName, BioJavaUtil.skewMinimums(t).toString().replace(",", ""));
 
                 return "File " + outputFileName + " created!";
             } catch (FileNotFoundException e) {
