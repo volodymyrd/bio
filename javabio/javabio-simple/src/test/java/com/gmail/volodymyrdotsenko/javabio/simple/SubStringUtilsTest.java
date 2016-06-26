@@ -2,6 +2,9 @@ package com.gmail.volodymyrdotsenko.javabio.simple;
 
 import org.junit.Test;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static org.junit.Assert.*;
 
 /**
@@ -22,13 +25,13 @@ public class SubStringUtilsTest {
     @Test
     public void testFrequentWords() {
         assertEquals("{CATG=3, GCAT=3}",
-                SubStringUtils.frequentWords("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, -1).toString());
+                SubStringUtils.frequentWords("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, -1, 0).toString());
     }
 
     @Test
     public void testAllFrequentWords() {
         assertEquals("{ATGA=2, TGCA=2, CATG=3, GCAT=3}",
-                SubStringUtils.frequentWords("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1).toString());
+                SubStringUtils.frequentWords("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1, 0).toString());
     }
 
     @Test
@@ -67,7 +70,31 @@ public class SubStringUtilsTest {
     @Test
     public void testApproximatePatternMatchingProblem() {
         assertEquals("[6, 7, 26, 27]", SubStringUtils
-                .approximatePatternMatchingProblem("CGCCCGAATCCAGAACGCATTCCCATATTTCGGGACCACTGGCCTCCACGGTACGGACGTCAATCAAAT",
+                .approximatePatternCountList("CGCCCGAATCCAGAACGCATTCCCATATTTCGGGACCACTGGCCTCCACGGTACGGACGTCAATCAAAT",
                         "ATTCTGGA", 3).toString());
+    }
+
+    @Test
+    public void testApproximatePatternMatchingProblemCount() {
+        assertEquals(11L, SubStringUtils
+                .approximatePatternCount("AACAAGCTGATAAACATTTAAAGAG",
+                        "AAAAA", 2));
+    }
+
+    @Test
+    public void testGetFrequentWordsMapMismatch() {
+        assertEquals("{ATGC=5, GATG=5, ATGT=5}",
+                SubStringUtils.frequentWords("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, -1, 1).toString());
+    }
+
+    @Test
+    public void testPermutations(){
+        System.out.println(SubStringUtils.permutations("ATGC").size());
+    }
+
+    @Test
+    public void testGetAllKMerPatterns() {
+        System.out.println(SubStringUtils.getAllKMerPatterns(2,
+                Stream.of("A", "T", "G", "C").collect(Collectors.toList())));
     }
 }

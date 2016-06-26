@@ -83,7 +83,9 @@ public class StringSearchCommander extends BaseCommander {
             @CliOption(key = {"frequency"}, mandatory = true,
                     help = "frequency, if greater or equal 0 will get all with greater this frequency, if less 0 print only with maximum frequency") Integer frequency,
             @CliOption(key = {"withCount"}, mandatory = false, help = "Print result with count",
-                    unspecifiedDefaultValue = "false") Boolean withCount) {
+                    unspecifiedDefaultValue = "false") Boolean withCount,
+            @CliOption(key = {"d"}, mandatory = false,
+                    unspecifiedDefaultValue = "0", help = "Number of mismatches") Integer d) {
 
         if (isEmpty(text) && isEmpty(textFileName)) {
             LOGGER.severe("You must set either 'text' or 'textFileName' parameter!");
@@ -97,7 +99,7 @@ public class StringSearchCommander extends BaseCommander {
         if (isEmpty(t))
             return "";
 
-        Map<String, Integer> result = SubStringUtils.frequentWords(t, kmer, frequency);
+        Map<String, Integer> result = SubStringUtils.frequentWords(t, kmer, frequency, d);
 
         LOGGER.info("Number of words: " + result.size());
 
@@ -147,5 +149,33 @@ public class StringSearchCommander extends BaseCommander {
             @CliOption(key = {"text1"}, help = "Text1") String text1,
             @CliOption(key = {"text2"}, help = "Text2") String text2) {
         return SubStringUtils.hammingDistance(text1, text2);
+    }
+
+    @CliCommand(value = {"approximatePatternCount"}, help = "Find all approximate occurrences of a pattern in a string")
+    public String approximatePatternCount(
+            @CliOption(key = {"text"}, mandatory = false, help = "Text") String text,
+            @CliOption(key = {"textFileName"}, mandatory = false, help = "File name contains text") String textFileName,
+            @CliOption(key = {"pattern"}, help = "Pattern") String pattern,
+            @CliOption(key = {"d"}, help = "Number of mismatches") Integer d,
+            @CliOption(key = {"count"}, mandatory = false, unspecifiedDefaultValue = "false",
+                    help = "Count matching patterns - true or print matching patterns - false") boolean count) {
+
+        if (isEmpty(text) && isEmpty(textFileName)) {
+            LOGGER.severe("You must set either 'text' or 'textFileName' parameter!");
+
+            return "Wrong input parameters";
+        }
+
+        String t = null;
+
+        t = extractText(text, textFileName);
+        if (isEmpty(t))
+            return "";
+
+        if (count)
+            return String.valueOf(SubStringUtils.approximatePatternCount(t, pattern, d));
+        else
+            return SubStringUtils.approximatePatternCountList(t, pattern, d)
+                    .stream().map(e -> e.toString()).collect(Collectors.joining(" "));
     }
 }
