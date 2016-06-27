@@ -47,13 +47,13 @@ public class StringSearchCommanderTest {
     public void testFrequentWordsWithMismatches() {
         CommandResult cr = shell.executeCommand("frequentWords --text ACGTTGCATGTCGCATGATGCATGAGAGCT --kmer 4 --frequency -1 --d 1");
         assertEquals(true, cr.isSuccess());
-        assertEquals("ATGC ATGT GATG", cr.getResult());
+        assertEquals("ATGC GATG ATGT", cr.getResult());
     }
 
     @Test
     public void testFrequentWordsWithMismatches1() {
         CommandResult cr = shell.executeCommand("frequentWords --text AAAAAAAAAA --kmer 2 --frequency -1 --d 1");
         assertEquals(true, cr.isSuccess());
-        assertEquals("AA AC AG CA AT GA TA", cr.getResult());
+        assertEquals("AA AC AT AG GA TA CA", cr.getResult());
     }
 }

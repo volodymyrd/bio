@@ -166,102 +166,56 @@ public class SubStringUtils {
         return approximatePatternCountList(text, pattern, d).size();
     }
 
-    public static Set<String> permutations(String str) {
-        Set<String> set = new HashSet<>();
+    public static long frequentWordsWithMismatches(Map<String, Long> counts, String text, int k, int d) {
+        Set<String> patterns = permutationsWithRepetitions(k, new char[]{'A', 'T', 'C', 'G'});
+        long max = 0;
+        for (String p : patterns) {
+            long m = approximatePatternCount(text, p, d);
+            if (m >= max) {
+                max = m;
+                counts.put(p, m);
+            }
+        }
 
-        permutations("", str, set);
+        return max;
+    }
+
+    public static String frequentWordsWithMismatches(String text, int k, int d) {
+        Map<String, Long> counts = new HashMap<>();
+        long m = frequentWordsWithMismatches(counts, text, k, d);
+        return counts.entrySet().stream().filter(e -> e.getValue() >= m)
+                .map(e -> e.getKey()).collect(Collectors.joining(" "));
+    }
+
+
+    public static Set<String> permutationsWithRepetitions(int K, char[] abc) {
+        int n = abc.length;
+        if (K < 1 || K > n)
+            throw new IllegalArgumentException("Illegal number of positions.");
+
+        int[] indexes = new int[n];
+
+        int total = (int) Math.pow(n, K);
+
+        Set<String> set = new TreeSet<>();
+
+        while (total-- > 0) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < n - (n - K); i++)
+                sb.append(abc[indexes[i]]);
+
+            set.add(sb.toString());
+
+            for (int i = 0; i < n; i++) {
+                if (indexes[i] >= n - 1) {
+                    indexes[i] = 0;
+                } else {
+                    indexes[i]++;
+                    break;
+                }
+            }
+        }
 
         return set;
-    }
-
-    private static void permutations(String prefix, String str, Set<String> set) {
-        int n = str.length();
-
-        if (n == 0)
-            set.add(prefix);
-        else {
-            for (int i = 0; i < n; i++)
-                permutations(prefix + str.charAt(i), str.substring(0, i) + str.substring(i + 1, n), set);
-        }
-    }
-
-    public static Set<String> getAllKMerPatterns(int K, List<String> abc) {
-        Set<String> p = new HashSet<>();
-        int L = abc.size();
-
-        Attempts attempts = new Attempts(L, K);
-
-        EXIT:
-        for (; ; ) {
-            StringBuilder sb = new StringBuilder();
-            for (int j = 0; j < K; j++) {
-                int i = attempts.next();
-                if (i == -1)
-                    break EXIT;
-
-                sb.append(abc.get(i));
-            }
-
-            add(abc, p, sb, attempts);
-        }
-
-        return p;
-    }
-
-    private static void add(List<String> abc, Set<String> p, StringBuilder sb, Attempts attempts) {
-        if (!p.add(sb.toString())) {
-            attempts.back();
-            sb.delete(sb.length() - 1, sb.length());
-            sb.append(abc.get(attempts.next()));
-            add(abc, p, sb, attempts);
-        }
-    }
-
-    private static class Attempts {
-        private final Map<Integer, Long> attempts = new HashMap<>();
-        private final int L;
-        private int pos;
-
-        public Attempts(int L, int k) {
-            long attempt = (long) Math.pow(L, k);
-            this.L = L;
-            for (int i = 0; i < L; i++) {
-                attempts.put(i, attempt);
-            }
-        }
-
-        public int next() {
-            if (attempts.values().stream().filter(v -> v > 0).findFirst().isPresent()) {
-                long i = attempts.get(pos);
-
-                if (i <= 0) {
-                    nextPos();
-                    return next();
-                }
-
-                attempts.put(pos, --i);
-
-                int ind = nextPos();
-
-                return ind;
-            } else
-                return -1;
-        }
-
-        private int nextPos() {
-            int ind = pos++;
-            if (pos == L)
-                pos = 0;
-
-            return ind;
-        }
-
-        public void back() {
-            int ind = pos - 1;
-            if (ind < 0)
-                ind = L - 1;
-
-            attempts.put(ind, attempts.get(ind) + 1);
-        }
     }
 }

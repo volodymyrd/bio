@@ -99,14 +99,18 @@ public class StringSearchCommander extends BaseCommander {
         if (isEmpty(t))
             return "";
 
-        Map<String, Integer> result = SubStringUtils.frequentWords(t, kmer, frequency, d);
+        if (d == 0) {
+            Map<String, Integer> result = SubStringUtils.frequentWords(t, kmer, frequency, 0);
 
-        LOGGER.info("Number of words: " + result.size());
+            LOGGER.info("Number of words: " + result.size());
 
-        if (withCount)
-            return result.toString();
-        else
-            return result.keySet().stream().sorted().map(e -> e.toString()).collect(Collectors.joining(" "));
+            if (withCount)
+                return result.toString();
+            else
+                return result.keySet().stream().sorted().map(e -> e.toString()).collect(Collectors.joining(" "));
+        } else {
+            return SubStringUtils.frequentWordsWithMismatches(t, kmer, d).toString();
+        }
     }
 
     @CliCommand(value = {"clump"}, help = "Get clumps in genome")

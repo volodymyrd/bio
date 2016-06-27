@@ -2,10 +2,7 @@ package com.gmail.volodymyrdotsenko.javabio.simple;
 
 import org.junit.Test;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Volodymyr Dotsenko on 6/19/16.
@@ -88,13 +85,26 @@ public class SubStringUtilsTest {
     }
 
     @Test
-    public void testPermutations(){
-        System.out.println(SubStringUtils.permutations("ATGC").size());
+    public void testPermutations() {
+        assertEquals("[AA, AT, TA, TT]",
+                SubStringUtils.permutationsWithRepetitions(2, new char[]{'A', 'T'}).toString());
     }
 
     @Test
-    public void testGetAllKMerPatterns() {
-        System.out.println(SubStringUtils.getAllKMerPatterns(2,
-                Stream.of("A", "T", "G", "C").collect(Collectors.toList())));
+    public void testFrequentWordsWithMismatchesShouldIncludesKmersThatNotAppearInText() {
+        assertEquals("AA AC AT AG GA TA CA",
+                SubStringUtils.frequentWordsWithMismatches("AAAAAAAAAA", 2, 1));
+    }
+
+    @Test
+    public void testFrequentWordsWithMismatches() {
+        assertEquals("ATGC GATG ATGT",
+                SubStringUtils.frequentWordsWithMismatches("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1));
+    }
+
+    @Test
+    public void testFrequentWordsWithMismatchesShouldNotFindingPatternsInTheReverseComplementText() {
+        assertEquals("GGTA",
+                SubStringUtils.frequentWordsWithMismatches("AATTAATTGGTAGGTAGGTA", 4, 0));
     }
 }
