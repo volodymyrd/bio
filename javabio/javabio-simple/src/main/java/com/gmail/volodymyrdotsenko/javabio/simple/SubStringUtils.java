@@ -166,11 +166,13 @@ public class SubStringUtils {
         return approximatePatternCountList(text, pattern, d).size();
     }
 
-    public static long frequentWordsWithMismatches(Map<String, Long> counts, String text, int k, int d) {
+    public static long frequentWordsWithMismatches(Map<String, Long> counts, String text, int k, int d,
+                                                   boolean complement) {
         Set<String> patterns = permutationsWithRepetitions(k, new char[]{'A', 'T', 'C', 'G'});
         long max = 0;
         for (String p : patterns) {
-            long m = approximatePatternCount(text, p, d);
+            long m = approximatePatternCount(text, p, d)
+                    + (complement ? approximatePatternCount(text, BioJavaUtil.reverseComplement(p), d) : 0);
             if (m >= max) {
                 max = m;
                 counts.put(p, m);
@@ -180,20 +182,35 @@ public class SubStringUtils {
         return max;
     }
 
-    public static String frequentWordsWithMismatches(String text, int k, int d) {
+    public static String frequentWordsWithMismatches(String text, int k, int d, boolean complement) {
         Map<String, Long> counts = new HashMap<>();
-        long m = frequentWordsWithMismatches(counts, text, k, d);
+        long m = frequentWordsWithMismatches(counts, text, k, d, complement);
         return counts.entrySet().stream().filter(e -> e.getValue() >= m)
                 .map(e -> e.getKey()).collect(Collectors.joining(" "));
+    }
+
+    public static Set<String> dNeighbors(String pattern, int d) {
+        Set<String> neighborhoods = new HashSet<>();
+
+        permutationsWithRepetitions(pattern.length(), new char[]{'A', 'T', 'C', 'G'})
+                .forEach(e -> {
+                    if (hammingDistance(pattern, e) <= d) {
+                        neighborhoods.add(e);
+                    }
+                });
+
+        return neighborhoods;
     }
 
 
     public static Set<String> permutationsWithRepetitions(int K, char[] abc) {
         int n = abc.length;
-        if (K < 1 || K > n)
+        if (K < 1)
             throw new IllegalArgumentException("Illegal number of positions.");
 
-        int[] indexes = new int[n];
+        int N = n >= K ? n : K;
+
+        int[] indexes = new int[N];
 
         int total = (int) Math.pow(n, K);
 
@@ -201,12 +218,12 @@ public class SubStringUtils {
 
         while (total-- > 0) {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < n - (n - K); i++)
+            for (int i = 0; i < N - (N - K); i++)
                 sb.append(abc[indexes[i]]);
 
             set.add(sb.toString());
 
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < N; i++) {
                 if (indexes[i] >= n - 1) {
                     indexes[i] = 0;
                 } else {

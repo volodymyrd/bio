@@ -85,7 +85,9 @@ public class StringSearchCommander extends BaseCommander {
             @CliOption(key = {"withCount"}, mandatory = false, help = "Print result with count",
                     unspecifiedDefaultValue = "false") Boolean withCount,
             @CliOption(key = {"d"}, mandatory = false,
-                    unspecifiedDefaultValue = "0", help = "Number of mismatches") Integer d) {
+                    unspecifiedDefaultValue = "0", help = "Number of mismatches") Integer d,
+            @CliOption(key = {"complement"}, mandatory = false,
+                    unspecifiedDefaultValue = "0", help = "With Reverse Complements") boolean complement) {
 
         if (isEmpty(text) && isEmpty(textFileName)) {
             LOGGER.severe("You must set either 'text' or 'textFileName' parameter!");
@@ -109,7 +111,7 @@ public class StringSearchCommander extends BaseCommander {
             else
                 return result.keySet().stream().sorted().map(e -> e.toString()).collect(Collectors.joining(" "));
         } else {
-            return SubStringUtils.frequentWordsWithMismatches(t, kmer, d).toString();
+            return SubStringUtils.frequentWordsWithMismatches(t, kmer, d, complement).toString();
         }
     }
 
@@ -181,5 +183,44 @@ public class StringSearchCommander extends BaseCommander {
         else
             return SubStringUtils.approximatePatternCountList(t, pattern, d)
                     .stream().map(e -> e.toString()).collect(Collectors.joining(" "));
+    }
+
+    @CliCommand(value = {"neighbors"}, help = "Find the d-neighborhood of a string")
+    public String neighbors(
+            @CliOption(key = {"text"}, mandatory = false, help = "Text") String text,
+            @CliOption(key = {"textFileName"}, mandatory = false, help = "File name contains text") String textFileName,
+            @CliOption(key = {"d"}, mandatory = true, help = "Distance") Integer d,
+            @CliOption(key = {"outputFileName"}, mandatory = false,
+                    help = "File name contains starting positions")
+                    String outputFileName) {
+
+        if (isEmpty(text) && isEmpty(textFileName)) {
+            LOGGER.severe("You must set either 'text' or 'textFileName' parameter!");
+
+            return "Wrong input parameters";
+        }
+
+        String t = null, p = null;
+
+        t = extractText(text, textFileName);
+        if (isEmpty(t))
+            return "";
+
+        if (isEmpty(outputFileName))
+            return String.valueOf(SubStringUtils.dNeighbors(t, d)
+                    .stream().map(e -> e.toString()).collect(Collectors.joining("\n\r")));
+        else {
+            try {
+                saveTextFile(outputFileName, String.valueOf(SubStringUtils.dNeighbors(t, d)
+                        .stream().map(e -> e.toString()).collect(Collectors.joining("\r"))));
+
+                return "File " + outputFileName + " created!";
+            } catch (FileNotFoundException e) {
+                LOGGER.severe(e.getMessage());
+            }
+
+            return "Error creating a file";
+        }
+
     }
 }

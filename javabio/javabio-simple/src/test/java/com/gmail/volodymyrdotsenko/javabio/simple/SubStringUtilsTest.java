@@ -91,20 +91,44 @@ public class SubStringUtilsTest {
     }
 
     @Test
+    public void testPermutations2() {
+        assertEquals("[AAA, AAT, ATA, ATT, TAA, TAT, TTA, TTT]",
+                SubStringUtils.permutationsWithRepetitions(3, new char[]{'A', 'T'}).toString());
+    }
+
+    @Test
     public void testFrequentWordsWithMismatchesShouldIncludesKmersThatNotAppearInText() {
         assertEquals("AA AC AT AG GA TA CA",
-                SubStringUtils.frequentWordsWithMismatches("AAAAAAAAAA", 2, 1));
+                SubStringUtils.frequentWordsWithMismatches("AAAAAAAAAA", 2, 1, false));
+
+        assertEquals("AT TA",
+                SubStringUtils.frequentWordsWithMismatches("AAAAAAAAAA", 2, 1, true));
     }
 
     @Test
     public void testFrequentWordsWithMismatches() {
         assertEquals("ATGC GATG ATGT",
-                SubStringUtils.frequentWordsWithMismatches("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1));
+                SubStringUtils.frequentWordsWithMismatches("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1, false));
     }
 
     @Test
     public void testFrequentWordsWithMismatchesShouldNotFindingPatternsInTheReverseComplementText() {
         assertEquals("GGTA",
-                SubStringUtils.frequentWordsWithMismatches("AATTAATTGGTAGGTAGGTA", 4, 0));
+                SubStringUtils.frequentWordsWithMismatches("AATTAATTGGTAGGTAGGTA", 4, 0, false));
+
+        assertEquals("AATT",
+                SubStringUtils.frequentWordsWithMismatches("AATTAATTGGTAGGTAGGTA", 4, 0, true));
+    }
+
+    @Test
+    public void testFrequentWordsWithMismatchesComplements() {
+        assertEquals("ACAT ATGT",
+                SubStringUtils.frequentWordsWithMismatches("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1, true));
+    }
+
+    @Test
+    public void testDNeighborhoods() {
+        assertEquals("[ACC, AGG, ACT, ATG, ACG, CCG, AAG, TCG, GCG, ACA]",
+                SubStringUtils.dNeighbors("ACG", 1).toString());
     }
 }
