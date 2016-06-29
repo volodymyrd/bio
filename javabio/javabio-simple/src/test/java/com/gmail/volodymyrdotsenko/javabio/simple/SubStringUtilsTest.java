@@ -143,18 +143,6 @@ public class SubStringUtilsTest {
     }
 
     @Test
-    public void testMotifEnumerationBruteForce2() {
-        assertEquals("[]", SubStringUtils.motifEnumerationBruteForce(
-                Stream.of("GGTACTAAGATGTTAAGCACCACTA",
-                        "AGGTTTCTTCCGCAGCCGCAGTTAC",
-                        "TATTGTTTCTTTCGTTCAAATGTGT",
-                        "TTTTTGACGGATATATAATAAGTGA",
-                        "GTTGCATGTTGTCACAAGGGTTTTG",
-                        "TACTTGGATATGTTCGTATTAGCGA")
-                        .collect(Collectors.toList()), 5, 2).stream().collect(Collectors.joining(" ")));
-    }
-
-    @Test
     public void testMotifEnumerationBruteForceOffByOneError() {
         assertEquals("[CGT, ACG]", SubStringUtils.motifEnumerationBruteForce(
                 Stream.of("ACGT", "ACGT", "ACGT")
