@@ -2,6 +2,9 @@ package com.gmail.volodymyrdotsenko.javabio.simple;
 
 import org.junit.Test;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -130,5 +133,38 @@ public class SubStringUtilsTest {
     public void testDNeighborhoods() {
         assertEquals("[ACC, AGG, ACT, ATG, ACG, CCG, AAG, TCG, GCG, ACA]",
                 SubStringUtils.dNeighbors("ACG", 1).toString());
+    }
+
+    @Test
+    public void testMotifEnumerationBruteForce() {
+        assertEquals("[ATT, TTT, GTT, ATA]", SubStringUtils.motifEnumerationBruteForce(
+                Stream.of("ATTTGGC", "TGCCTTA", "CGGTATC", "GAAAATT")
+                        .collect(Collectors.toList()), 3, 1).toString());
+    }
+
+    @Test
+    public void testMotifEnumerationBruteForce2() {
+        assertEquals("[]", SubStringUtils.motifEnumerationBruteForce(
+                Stream.of("GGTACTAAGATGTTAAGCACCACTA",
+                        "AGGTTTCTTCCGCAGCCGCAGTTAC",
+                        "TATTGTTTCTTTCGTTCAAATGTGT",
+                        "TTTTTGACGGATATATAATAAGTGA",
+                        "GTTGCATGTTGTCACAAGGGTTTTG",
+                        "TACTTGGATATGTTCGTATTAGCGA")
+                        .collect(Collectors.toList()), 5, 2).stream().collect(Collectors.joining(" ")));
+    }
+
+    @Test
+    public void testMotifEnumerationBruteForceOffByOneError() {
+        assertEquals("[CGT, ACG]", SubStringUtils.motifEnumerationBruteForce(
+                Stream.of("ACGT", "ACGT", "ACGT")
+                        .collect(Collectors.toList()), 3, 0).toString());
+    }
+
+    @Test
+    public void testMotifEnumerationBruteForceDgreater0() {
+        assertEquals("[AAA, CAA, AAC, AAT, TAA, GAA, AAG, AGA, ATA, ACA]", SubStringUtils.motifEnumerationBruteForce(
+                Stream.of("AAAAA", "AAAAA", "AAAAA")
+                        .collect(Collectors.toList()), 3, 1).toString());
     }
 }

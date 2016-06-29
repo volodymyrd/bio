@@ -190,18 +190,14 @@ public class SubStringUtils {
     }
 
     public static Set<String> dNeighbors(String pattern, int d) {
-        Set<String> neighborhoods = new HashSet<>();
-
-        permutationsWithRepetitions(pattern.length(), new char[]{'A', 'T', 'C', 'G'})
-                .forEach(e -> {
-                    if (hammingDistance(pattern, e) <= d) {
-                        neighborhoods.add(e);
-                    }
-                });
-
-        return neighborhoods;
+        return dNeighbors(pattern, d, permutationsWithRepetitions(pattern.length(), new char[]{'A', 'T', 'C', 'G'}));
     }
 
+    public static Set<String> dNeighbors(String pattern, int d, Set<String> permutationsWithRepetitions) {
+        return permutationsWithRepetitions.stream()
+                .filter(e -> hammingDistance(pattern, e) <= d)
+                .collect(Collectors.toSet());
+    }
 
     public static Set<String> permutationsWithRepetitions(int K, char[] abc) {
         int n = abc.length;
@@ -234,5 +230,21 @@ public class SubStringUtils {
         }
 
         return set;
+    }
+
+    public static Set<String> motifEnumerationBruteForce(List<String> dnas, int k, int d) {
+        Set<String> motifs = new HashSet<>();
+
+        Set<String> permutationsWithRepetitions = permutationsWithRepetitions(k, new char[]{'A', 'T', 'C', 'G'});
+
+        for (String p : permutationsWithRepetitions) {
+            for (String n : dNeighbors(p, d, permutationsWithRepetitions)) {
+                if (!dnas.stream().filter(s -> approximatePatternCount(s, n, d) == 0).findFirst().isPresent()) {
+                    motifs.add(n);
+                }
+            }
+        }
+
+        return motifs;
     }
 }
