@@ -36,10 +36,10 @@ public class SubStringUtils {
 
         if (greaterThan >= 0) {
             return frequents.entrySet().stream().filter(e -> e.getValue() > greaterThan)
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         } else {
             return frequents.entrySet().stream().filter(e -> e.getValue() == max)
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
     }
 
@@ -48,7 +48,7 @@ public class SubStringUtils {
         getFrequentWordsMap(frequents, text, k, 0);
 
         return frequents.entrySet().stream().filter(e -> e.getValue() == t)
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private static int getFrequentWordsMap(Map<String, Integer> frequents, String text, int k, int d) {
@@ -135,7 +135,7 @@ public class SubStringUtils {
 
     private static Map<String, Integer> filterFrequensy(Map<String, Integer> frequents, int frequency) {
         return frequents.entrySet().parallelStream().filter(e -> e.getValue() == frequency)
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public static int hammingDistance(String s1, String s2) {
@@ -186,7 +186,7 @@ public class SubStringUtils {
         Map<String, Long> counts = new HashMap<>();
         long m = frequentWordsWithMismatches(counts, text, k, d, complement);
         return counts.entrySet().stream().filter(e -> e.getValue() >= m)
-                .map(e -> e.getKey()).collect(Collectors.joining(" "));
+                .map(Map.Entry::getKey).collect(Collectors.joining(" "));
     }
 
     public static Set<String> dNeighbors(String pattern, int d) {
