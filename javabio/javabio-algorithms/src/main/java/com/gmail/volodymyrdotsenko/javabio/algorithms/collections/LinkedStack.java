@@ -3,36 +3,35 @@ package com.gmail.volodymyrdotsenko.javabio.algorithms.collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+
 /**
- * The <tt>ResizingArrayStack</tt> class represents a last-in-first-out (LIFO) stack
- * of generic items.
+ * The <tt>LinkedStack</tt> class represents a last-in-first-out (LIFO) stack of
+ * generic items.
  * It supports the usual <em>push</em> and <em>pop</em> operations, along with methods
  * for peeking at the top item, testing if the stack is empty, and iterating through
  * the items in LIFO order.
- * <p>
- * This implementation uses a resizing array, which double the underlying array
- * when it is full and halves the underlying array when it is one-quarter full.
- * The <em>push</em> and <em>pop</em> operations take constant amortized time.
- * The <em>size</em>, <em>peek</em>, and <em>is-empty</em> operations takes
- * constant time in the worst case.
- * <p>
- * For additional documentation,
- * see <a href="http://algs4.cs.princeton.edu/13stacks">Section 1.3</a> of
- * <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  *
  * @author Robert Sedgewick
  * @author Kevin Wayne
  */
-public class ResizingArrayStack<Item> implements Iterable<Item> {
-    private Item[] a;         // array of items
-    private int N;            // number of elements on stack
+public class LinkedStack<Item> implements Iterable<Item> {
+
+    private int N;          // size of the stack
+    private Node first;     // top of stack
+
+    // helper linked list class
+    private class Node {
+        private Item item;
+        private Node next;
+    }
 
     /**
      * Initializes an empty stack.
      */
-    public ResizingArrayStack() {
-        a = (Item[]) new Object[2];
+    public LinkedStack() {
+        first = null;
         N = 0;
+        assert check();
     }
 
     /**
@@ -41,7 +40,7 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
      * @return true if this stack is empty; false otherwise
      */
     public boolean isEmpty() {
-        return N == 0;
+        return first == null;
     }
 
     /**
@@ -53,22 +52,18 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
         return N;
     }
 
-    // resize the underlying array holding the elements
-    private void resize(int capacity) {
-        assert capacity >= N;
-        Item[] temp = (Item[]) new Object[capacity];
-        System.arraycopy(a, 0, temp, 0, N);
-        a = temp;
-    }
-
     /**
      * Adds the item to this stack.
      *
      * @param item the item to add
      */
     public void push(Item item) {
-        if (N == a.length) resize(2 * a.length);    // double size of array if necessary
-        a[N++] = item;                            // add item
+        Node oldfirst = first;
+        first = new Node();
+        first.item = item;
+        first.next = oldfirst;
+        N++;
+        assert check();
     }
 
     /**
@@ -79,12 +74,11 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
      */
     public Item pop() {
         if (isEmpty()) throw new NoSuchElementException("Stack underflow");
-        Item item = a[N - 1];
-        a[N - 1] = null;                              // to avoid loitering
+        Item item = first.item;        // save item to return
+        first = first.next;            // delete first node
         N--;
-        // shrink size of array if necessary
-        if (N > 0 && N == a.length / 4) resize(a.length / 2);
-        return item;
+        assert check();
+        return item;                   // return the saved item
     }
 
     /**
@@ -95,7 +89,7 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
      */
     public Item peek() {
         if (isEmpty()) throw new NoSuchElementException("Stack underflow");
-        return a[N - 1];
+        return first.item;
     }
 
     /**
@@ -105,20 +99,16 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
      */
     @Override
     public Iterator<Item> iterator() {
-        return new ReverseArrayIterator();
+        return new ListIterator();
     }
 
     // an iterator, doesn't implement remove() since it's optional
-    private class ReverseArrayIterator implements Iterator<Item> {
-        private int i;
-
-        ReverseArrayIterator() {
-            i = N - 1;
-        }
+    private class ListIterator implements Iterator<Item> {
+        private Node current = first;
 
         @Override
         public boolean hasNext() {
-            return i >= 0;
+            return current != null;
         }
 
         @Override
@@ -129,7 +119,36 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
         @Override
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
-            return a[i--];
+            Item item = current.item;
+            current = current.next;
+            return item;
         }
+    }
+
+    // check internal invariants
+    private boolean check() {
+
+        // check a few properties of instance variable 'first'
+        if (N < 0) {
+            return false;
+        }
+        if (N == 0) {
+            if (first != null) return false;
+        } else if (N == 1) {
+            if (first == null) return false;
+            if (first.next != null) return false;
+        } else {
+            if (first == null) return false;
+            if (first.next == null) return false;
+        }
+
+        // check internal consistency of instance variable N
+        int numberOfNodes = 0;
+        for (Node x = first; x != null && numberOfNodes <= N; x = x.next) {
+            numberOfNodes++;
+        }
+        if (numberOfNodes != N) return false;
+
+        return true;
     }
 }
