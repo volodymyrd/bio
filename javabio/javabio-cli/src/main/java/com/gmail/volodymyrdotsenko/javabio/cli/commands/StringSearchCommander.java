@@ -1,5 +1,6 @@
 package com.gmail.volodymyrdotsenko.javabio.cli.commands;
 
+import com.gmail.volodymyrdotsenko.javabio.cli.utils.FileUtils;
 import com.gmail.volodymyrdotsenko.javabio.simple.SubStringUtils;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
@@ -7,6 +8,8 @@ import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -222,5 +225,25 @@ public class StringSearchCommander extends BaseCommander {
             return "Error creating a file";
         }
 
+    }
+
+    @CliCommand(value = {"medianString"}, help = "Median String Problem")
+    public String medianString(
+            @CliOption(key = {"dnasFileName"}, mandatory = true, help = "File contains of collection of strings Dna")
+                    String dnasFileName,
+            @CliOption(key = {"k"}, mandatory = true, help = "An integer k") Integer k) {
+
+        String t = null, p = null;
+
+        try {
+            List<String> list = FileUtils.getListFromFile(dnasFileName);
+
+            return SubStringUtils.medianString(list, k)
+                    .stream().map(e -> e).collect(Collectors.joining(" "));
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+
+            return "";
+        }
     }
 }

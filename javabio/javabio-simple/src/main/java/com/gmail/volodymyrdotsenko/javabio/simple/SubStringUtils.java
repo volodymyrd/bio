@@ -247,4 +247,50 @@ public class SubStringUtils {
 
         return motifs;
     }
+
+    public static long motifsWithMinHammingDistance(String pattern, String text) {
+        return motifsWithMinHammingDistance(pattern, text, new HashMap<>());
+    }
+
+    public static long motifsWithMinHammingDistance(String pattern, String text, Map<String, Long> motifsCount) {
+        int n = text.length();
+        int k = pattern.length();
+        long min = Long.MAX_VALUE;
+        for (int i = 0; i < n - k + 1; i++) {
+            String motif = text.substring(i, i + k);
+            Long l = motifsCount.get(motif);
+
+            if (l == null) {
+                long d = hammingDistance(motif, pattern);
+                if (d < min) {
+                    motifsCount.put(motif, d);
+                    min = d;
+                }
+            }
+        }
+
+        return min;
+    }
+
+    public static  Set<String> medianString(List<String> dnas, int k) {
+        Set<String> medians = new HashSet<>();
+        long min = Long.MAX_VALUE;
+        for (String p : permutationsWithRepetitions(k, new char[]{'A', 'T', 'C', 'G'})) {
+            long sum = 0;
+            for (String dna : dnas) {
+                //Map<String, Long> temp = new HashMap<>();
+                sum += motifsWithMinHammingDistance(p, dna);
+            }
+
+            if (sum < min) {
+                min = sum;
+                medians.clear();
+                medians.add(p);
+            } else if (sum == min) {
+                medians.add(p);
+            }
+        }
+
+        return medians;
+    }
 }

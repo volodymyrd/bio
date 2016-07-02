@@ -2,6 +2,8 @@ package com.gmail.volodymyrdotsenko.javabio.simple;
 
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -154,5 +156,38 @@ public class SubStringUtilsTest {
         assertEquals("[AAA, CAA, AAC, AAT, TAA, GAA, AAG, AGA, ATA, ACA]", SubStringUtils.motifEnumerationBruteForce(
                 Stream.of("AAAAA", "AAAAA", "AAAAA")
                         .collect(Collectors.toList()), 3, 1).toString());
+    }
+
+    @Test
+    public void testMotifsWithMinHammingDistance() {
+        Map<String, Long> motifs = new HashMap<>();
+        assertEquals(3, SubStringUtils.motifsWithMinHammingDistance("GATTCTCA", "GCAAAGACGCTGACCAA", motifs));
+        assertEquals("[GACGCTGA]",
+                motifs.entrySet().stream().filter(e -> e.getValue() <= 3).map(e -> {
+                    return e.getKey();
+                }).collect(Collectors.toSet()).toString());
+    }
+
+    @Test
+    public void testMedianString() {
+        assertEquals("[GAC]", SubStringUtils.medianString(
+                Stream.of("AAATTGACGCAT", "GACGACCACGTT", "CGTCAGCGCCTG", "GCTGAGCACCGG", "AGTTCGGGACAG")
+                        .collect(Collectors.toList()), 3).toString());
+    }
+
+    @Test
+    public void testMedianStringExtra() {
+        assertEquals("[CGGCGA]", SubStringUtils.medianString(
+                Stream.of("TGATGATAACGTGACGGGACTCAGCGGCGATGAAGGATGAGT",
+                        "CAGCGACAGACAATTTCAATAATATCCGCGGTAAGCGGCGTA",
+                        "TGCAGAGGTTGGTAACGCCGGCGACTCGGAGAGCTTTTCGCT",
+                        "TTTGTCATGAACTCAGATACCATAGAGCACCGGCGAGACTCA",
+                        "ACTGGGACTTCACATTAGGTTGAACCGCGAGCCAGGTGGGTG",
+                        "TTGCGGACGGGATACTCAATAACTAAGGTAGTTCAGCTGCGA",
+                        "TGGGAGGACACACATTTTCTTACCTCTTCCCAGCGAGATGGC",
+                        "GAAAAAACCTATAAAGTCCACTCTTTGCGGCGGCGAGCCATA",
+                        "CCACGTCCGTTACTCCGTCGCCGTCAGCGATAATGGGATGAG",
+                        "CCAAAGCTGCGAAATAACCATACTCTGCTCAGGAGCCCGATG")
+                        .collect(Collectors.toList()), 6).toString());
     }
 }
