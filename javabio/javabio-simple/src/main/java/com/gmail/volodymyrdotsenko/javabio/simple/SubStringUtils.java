@@ -323,4 +323,10 @@ public class SubStringUtils {
 
         return result;
     }
+
+    public static List<String> greedyMotifSearch(List<String> dnas, int k) {
+        List<String> motifs = new ArrayList<>();
+
+        return motifs;
+    }
 }
