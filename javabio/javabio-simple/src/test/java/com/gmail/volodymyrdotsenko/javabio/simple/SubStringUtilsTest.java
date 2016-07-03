@@ -1,5 +1,7 @@
 package com.gmail.volodymyrdotsenko.javabio.simple;
 
+import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNANucleotide;
+import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNAProfileMatrix;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -189,5 +191,58 @@ public class SubStringUtilsTest {
                         "CCACGTCCGTTACTCCGTCGCCGTCAGCGATAATGGGATGAG",
                         "CCAAAGCTGCGAAATAACCATACTCTGCTCAGGAGCCCGATG")
                         .collect(Collectors.toList()), 6).toString());
+    }
+
+    @Test
+    public void testFindProfileMostProbableKmer() {
+        DNAProfileMatrix.Builder builder = new DNAProfileMatrix.Builder();
+        builder.add(DNANucleotide.A, new Double[]{0.2, 0.2, 0.3, 0.2, 0.3});
+        builder.add(DNANucleotide.C, new Double[]{0.4, 0.3, 0.1, 0.5, 0.1});
+        builder.add(DNANucleotide.G, new Double[]{0.3, 0.3, 0.5, 0.2, 0.4});
+        builder.add(DNANucleotide.T, new Double[]{0.1, 0.2, 0.1, 0.1, 0.2});
+
+        assertEquals("CCGAG",
+                SubStringUtils.findProfileMostProbableKmer("ACCTGTTTATTGCCTAAGTTCCGAACAAACCCAATATAGCCCGAGGGCCT",
+                        5, builder.getDNAProfileMatrix()));
+    }
+
+    @Test
+    public void testFindProfileMostProbableKmerCheckBeginning() {
+        DNAProfileMatrix.Builder builder = new DNAProfileMatrix.Builder();
+        builder.add(DNANucleotide.A, new Double[]{0.7, 0.2, 0.1, 0.5, 0.4, 0.3, 0.2, 0.1});
+        builder.add(DNANucleotide.C, new Double[]{0.2, 0.2, 0.5, 0.4, 0.2, 0.3, 0.1, 0.6});
+        builder.add(DNANucleotide.G, new Double[]{0.1, 0.3, 0.2, 0.1, 0.2, 0.1, 0.4, 0.2});
+        builder.add(DNANucleotide.T, new Double[]{0.0, 0.3, 0.2, 0.0, 0.2, 0.3, 0.3, 0.1});
+
+        assertEquals("AGCAGCTT",
+                SubStringUtils.findProfileMostProbableKmer("AGCAGCTTTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGTCTGATCTGAACTGGTTACCTGCCGTGAGTAAAT",
+                        8, builder.getDNAProfileMatrix()));
+    }
+
+    @Test
+    public void testFindProfileMostProbableKmerCheckEnding() {
+        DNAProfileMatrix.Builder builder = new DNAProfileMatrix.Builder();
+        builder.add(DNANucleotide.A, "0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.1 0.2 0.3 0.4 0.5");
+        builder.add(DNANucleotide.C, "0.3 0.2 0.1 0.1 0.2 0.1 0.1 0.4 0.3 0.2 0.2 0.1");
+        builder.add(DNANucleotide.G, "0.2 0.1 0.4 0.3 0.1 0.1 0.1 0.3 0.1 0.1 0.2 0.1");
+        builder.add(DNANucleotide.T, "0.3 0.4 0.1 0.1 0.1 0.1 0.0 0.2 0.4 0.4 0.2 0.3");
+
+        assertEquals("AAGCAGAGTTTA",
+                SubStringUtils.findProfileMostProbableKmer("TTACCATGGGACCGCTGACTGATTTCTGGCGTCAGCGTGATGCTGGTGTGGATGACATTCCGGTGCGCTTTGTAAGCAGAGTTTA",
+                        12, builder.getDNAProfileMatrix()));
+    }
+
+    @Test
+    public void testFindProfileMostProbableKmer1() {
+        DNAProfileMatrix.Builder builder = new DNAProfileMatrix.Builder();
+        builder.add(DNANucleotide.A, "0.258 0.288 0.242 0.212 0.258 0.227 0.258 0.242 0.152 0.273 0.242 0.212 0.273 0.288 0.167");
+        builder.add(DNANucleotide.C, "0.242 0.227 0.258 0.273 0.242 0.212 0.152 0.394 0.273 0.227 0.212 0.288 0.273 0.258 0.288");
+        builder.add(DNANucleotide.G, "0.212 0.273 0.333 0.303 0.288 0.227 0.348 0.197 0.242 0.212 0.273 0.273 0.212 0.273 0.242");
+        builder.add(DNANucleotide.T, "0.288 0.212 0.167 0.212 0.212 0.333 0.242 0.167 0.333 0.288 0.273 0.227 0.242 0.182 0.303");
+
+
+        assertEquals("TCCGGAGCTAGACAT",
+                SubStringUtils.findProfileMostProbableKmer("TGACTAGCCTCTCATGTGTCTTCTTGATAAGGATCGCACTAGAGGGGCATCTGTGAGCGGCCGCTGTCTATTAATGTAACGGGGGCATTATCTAATGCAAAATCTATCATATCGGTTAACGACATAGCCACGAAACTCATTAAAAGCCCCCCCCACATGTTGCGCCCACTCGCACACCCCTGAATTTGGACCTTCCTACTAAAAGGAGATAGCTCTGGGACCACGGTTAGGCAGGCTGAGGAAATGTGCTTCAACAATACCTACAAAATCCTATGCACCTGGCTGGCTCTGTCCTAGCTGTGAGTGTTAACAAGCAGGCCCGGTCGCGGATCCAGCTAACTCCTAACAGCATTGTTAAGATTAAGGAAGGATCTCGGTTGGGGAATAAATGGTCAGACTCGTGATTATTTGATGAGCGAGAGGTGTCTCGATTTCTGGTCCGGGCAGAAATTTGCCTCCAGTGAGGTGAGGTTACAGCTATAGAAAACAATTGACGGTTTAGGGTCTTAAGGGAGTCCGCTCTGCAATCGACACATCCTGAACAGAAGTCTCGTGGACGTTGCTAGCGGGTGGATCACCACCGAGAAGGGGTTGCGGAGTCATAGGTCCTTCACTTAAGACCTTTTGCAGAATCCGGCGTCTTAATTTTTACGGCCATAGCTCGGCACTCCGGAGCTAGACATAACCATTAGTTGACTCGCCTTCGGAATGAAGACGTGATCAACTACTCCTGCCGGTCCGTGGCCCCTGTTAGCCCCTCTTCAAAGTCCTTGGATCAGAGGAGCCAAAATAGTAGTTGCCACGCGCAGAATAAGTCACCGAACCACCTCAAAAGGCAACTGAATCACCAACAGCTCCATACCGCCACCCTGGGTACCCTCATATCGCTGCGACCACTAGTTATTGAGACCGACAAGCTCTAGCGTATCGACTAATGCTTGAATACTTCTCAACGAGTCCTGATGCTCTTACCTTTGTCCAACTACCTCGTCACCATGCC",
+                        15, builder.getDNAProfileMatrix()));
     }
 }

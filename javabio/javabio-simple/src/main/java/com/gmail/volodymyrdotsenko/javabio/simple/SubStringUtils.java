@@ -1,5 +1,8 @@
 package com.gmail.volodymyrdotsenko.javabio.simple;
 
+import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNANucleotide;
+import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNAProfileMatrix;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -272,7 +275,7 @@ public class SubStringUtils {
         return min;
     }
 
-    public static  Set<String> medianString(List<String> dnas, int k) {
+    public static Set<String> medianString(List<String> dnas, int k) {
         Set<String> medians = new HashSet<>();
         long min = Long.MAX_VALUE;
         for (String p : permutationsWithRepetitions(k, new char[]{'A', 'T', 'C', 'G'})) {
@@ -292,5 +295,32 @@ public class SubStringUtils {
         }
 
         return medians;
+    }
+
+    public static double getProfileKmerProbability(String kmer, DNAProfileMatrix profile) {
+        double p = 0;
+        for (int j = 0; j < kmer.length(); j++) {
+            p += profile.getProbability(j, DNANucleotide.valueOf(kmer.charAt(j)));
+        }
+
+        return p;
+    }
+
+    public static String findProfileMostProbableKmer(String text, int k, DNAProfileMatrix profile) {
+        String result = "";
+
+        int n = text.length();
+        double max = 0;
+        for (int i = 0; i < n - k + 1; i++) {
+            String kmer = text.substring(i, i + k);
+            double p = getProfileKmerProbability(kmer, profile);
+
+            if (p >= max) {
+                max = p;
+                result = kmer;
+            }
+        }
+
+        return result;
     }
 }
