@@ -344,23 +344,32 @@ public class SubStringUtils {
     }
 
     public static List<String> greedyMotifSearch(List<String> dnas, int k) {
-        List<String> bestMotifs = new ArrayList<>();
+        MotifsHolder bestMotifs = new MotifsHolder(k);
+        for (String dna : dnas) {
+            bestMotifs.add(dna.substring(0, k));
+        }
+
+        //System.out.println(bestMotifs.score());
 
         String dna0 = dnas.get(0);
 
         for (int i = 0; i < dna0.length() - k + 1; i++) {
             String motif = dna0.substring(i, i + k);
 
-            MotifsHolder holder = new MotifsHolder(k).add(motif);
-            DNAProfileMatrix profile = holder.getProfileMatrix();
+            MotifsHolder motifs = new MotifsHolder(k).add(motif);
+            DNAProfileMatrix profile = motifs.getProfileMatrix();
 
             for (int j = 1; j < dnas.size(); j++) {
-                holder.add(findProfileMostProbableKmer(dnas.get(j), k, profile));
-
-                profile = holder.getProfileMatrix();
+                motifs.add(findProfileMostProbableKmer(dnas.get(j), k, profile));
+                profile = motifs.getProfileMatrix();
             }
+
+            if (motifs.score() < bestMotifs.score())
+                bestMotifs = motifs;
+
+            //System.out.println(motifs.score() + " " + motifs.getMotifs());
         }
 
-        return bestMotifs;
+        return bestMotifs.getMotifs();
     }
 }

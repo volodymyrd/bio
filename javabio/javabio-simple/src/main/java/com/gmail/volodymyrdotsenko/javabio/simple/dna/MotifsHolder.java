@@ -69,9 +69,9 @@ public class MotifsHolder {
         return motifs.size();
     }
 
-//    public List<String> getMotifs() {
-//        return motifs;
-//    }
+    public List<String> getMotifs() {
+        return motifs;
+    }
 
     public DNAProfileMatrix getProfileMatrix() {
         for (int i = 0; i < nucleotidesCounts.length; i++) {

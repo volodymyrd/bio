@@ -47,7 +47,11 @@ public class DNAProfileMatrix {
     }
 
     public double getProbability(int i, DNANucleotide nucleotide) {
-        return profile.get(nucleotide)[i];
+        Double[] vals = profile.get(nucleotide);
+        if (vals == null)
+            return 0d;
+        else
+            return profile.get(nucleotide)[i];
     }
 
     @Override

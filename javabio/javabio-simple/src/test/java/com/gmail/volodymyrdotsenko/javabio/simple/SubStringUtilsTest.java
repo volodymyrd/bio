@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Created by Volodymyr Dotsenko on 6/19/16.
@@ -247,7 +247,21 @@ public class SubStringUtilsTest {
     }
 
     @Test
-    public void testGetKmers(){
+    public void testGetKmers() {
         assertEquals("[AB, BC, CD, DE, EF]", SubStringUtils.getKmers("ABCDEF", 2).toString());
+    }
+
+    @Test
+    public void testGreedyMotifSearch() {
+        assertEquals("", SubStringUtils.greedyMotifSearch(
+                Stream.of("GGCGTTCAGGCA", "AAGAATCAGTCA", "CAAGGAGTTCGC", "CACGTCAATCAC", "CAATAATATTCG")
+                        .collect(Collectors.toList()), 3));
+    }
+
+    @Test
+    public void testGreedyMotifSearchPicksTheFirstOccurring() {
+        assertEquals("", SubStringUtils.greedyMotifSearch(
+                Stream.of("GCCCAA", "GGCCTG", "AACCTA", "TTCCTT")
+                        .collect(Collectors.toList()), 3));
     }
 }
