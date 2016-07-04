@@ -2,9 +2,11 @@ package com.gmail.volodymyrdotsenko.javabio.simple;
 
 import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNANucleotide;
 import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNAProfileMatrix;
+import com.gmail.volodymyrdotsenko.javabio.simple.dna.MotifsHolder;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Volodymyr Dotsenko on 6/19/16.
@@ -154,12 +156,13 @@ public class SubStringUtils {
 
     public static List<Integer> approximatePatternCountList(String text, String pattern, int d) {
         List<Integer> indexes = new ArrayList<>();
-        int n = text.length();
-        int k = pattern.length();
-        for (int i = 0; i < n - k + 1; i++) {
-            if (hammingDistance(text.substring(i, i + k), pattern) <= d) {
+        KmerIterator iterator = new KmerIterator(text, pattern.length());
+        int i = 0;
+        while (iterator.hasNext()) {
+            if (hammingDistance(iterator.next(), pattern) <= d) {
                 indexes.add(i);
             }
+            i++;
         }
 
         return indexes;
@@ -259,8 +262,9 @@ public class SubStringUtils {
         int n = text.length();
         int k = pattern.length();
         long min = Long.MAX_VALUE;
-        for (int i = 0; i < n - k + 1; i++) {
-            String motif = text.substring(i, i + k);
+        KmerIterator iterator = new KmerIterator(text, k);
+        while (iterator.hasNext()) {
+            String motif = iterator.next();
             Long l = motifsCount.get(motif);
 
             if (l == null) {
@@ -273,6 +277,20 @@ public class SubStringUtils {
         }
 
         return min;
+    }
+
+    public static List<String> getKmers(String text, int k) {
+        int n = text.length();
+        List<String> kmers = new ArrayList<>(n - k + 1);
+        kmers.add(text.substring(0, k));
+        StringBuilder builder = new StringBuilder(kmers.get(0));
+        for (int i = 1; i < n - k + 1; i++) {
+            builder.delete(0, 1);
+            builder.append(text.charAt(i + k - 1));
+            kmers.add(builder.toString());
+        }
+
+        return kmers;
     }
 
     public static Set<String> medianString(List<String> dnas, int k) {
@@ -311,8 +329,9 @@ public class SubStringUtils {
 
         int n = text.length();
         double max = 0;
-        for (int i = 0; i < n - k + 1; i++) {
-            String kmer = text.substring(i, i + k);
+        KmerIterator iterator = new KmerIterator(text, k);
+        while (iterator.hasNext()) {
+            String kmer = iterator.next();
             double p = getProfileKmerProbability(kmer, profile);
 
             if (p >= max) {
@@ -325,8 +344,23 @@ public class SubStringUtils {
     }
 
     public static List<String> greedyMotifSearch(List<String> dnas, int k) {
-        List<String> motifs = new ArrayList<>();
+        List<String> bestMotifs = new ArrayList<>();
 
-        return motifs;
+        String dna0 = dnas.get(0);
+
+        for (int i = 0; i < dna0.length() - k + 1; i++) {
+            String motif = dna0.substring(i, i + k);
+
+            MotifsHolder holder = new MotifsHolder(k).add(motif);
+            DNAProfileMatrix profile = holder.getProfileMatrix();
+
+            for (int j = 1; j < dnas.size(); j++) {
+                holder.add(findProfileMostProbableKmer(dnas.get(j), k, profile));
+
+                profile = holder.getProfileMatrix();
+            }
+        }
+
+        return bestMotifs;
     }
 }
