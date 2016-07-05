@@ -252,16 +252,28 @@ public class SubStringUtilsTest {
     }
 
     @Test
+    //http://www.mrgraeme.co.uk/greedy-motif-search/
     public void testGreedyMotifSearch() {
         assertEquals("", SubStringUtils.greedyMotifSearch(
                 Stream.of("GGCGTTCAGGCA", "AAGAATCAGTCA", "CAAGGAGTTCGC", "CACGTCAATCAC", "CAATAATATTCG")
                         .collect(Collectors.toList()), 3));
     }
-
-    @Test
-    public void testGreedyMotifSearchPicksTheFirstOccurring() {
-        assertEquals("", SubStringUtils.greedyMotifSearch(
-                Stream.of("GCCCAA", "GGCCTG", "AACCTA", "TTCCTT")
-                        .collect(Collectors.toList()), 3));
-    }
+//
+//    @Test
+//    public void testGreedyMotifSearchPicksTheFirstOccurring() {
+//        assertEquals("", SubStringUtils.greedyMotifSearch(
+//                Stream.of("GCCCAA", "GGCCTG", "AACCTA", "TTCCTT")
+//                        .collect(Collectors.toList()), 3));
+//    }
+//
+//    @Test
+//    public void testGreedyMotifSearch1() {
+//        assertEquals("", SubStringUtils.greedyMotifSearch(
+//                Stream.of("GCAGGTTAATACCGCGGATCAGCTGAGAAACCGGAATGTGCGT",
+//                        "CCTGCATGCCCGGTTTGAGGAACATCAGCGAAGAACTGTGCGT",
+//                        "GCGCCAGTAACCCGTGCCAGTCAGGTTAATGGCAGTAACATTT",
+//                        "AACCCGTGCCAGTCAGGTTAATGGCAGTAACATTTATGCCTTC",
+//                        "ATGCCTTCCGCGCCAATTGTTCGTATCGTCGCCACTTCGAGTG")
+//                        .collect(Collectors.toList()), 6));
+//    }
 }

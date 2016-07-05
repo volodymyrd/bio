@@ -6,7 +6,6 @@ import com.gmail.volodymyrdotsenko.javabio.simple.dna.MotifsHolder;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by Volodymyr Dotsenko on 6/19/16.
@@ -367,7 +366,7 @@ public class SubStringUtils {
             if (motifs.score() < bestMotifs.score())
                 bestMotifs = motifs;
 
-            //System.out.println(motifs.score() + " " + motifs.getMotifs());
+            System.out.println(bestMotifs.score() + " " + bestMotifs.getMotifs());
         }
 
         return bestMotifs.getMotifs();

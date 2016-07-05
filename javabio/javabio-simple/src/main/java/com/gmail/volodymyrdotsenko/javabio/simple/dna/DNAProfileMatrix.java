@@ -1,7 +1,6 @@
 package com.gmail.volodymyrdotsenko.javabio.simple.dna;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -47,10 +46,10 @@ public class DNAProfileMatrix {
     }
 
     public double getProbability(int i, DNANucleotide nucleotide) {
-        Double[] vals = profile.get(nucleotide);
-        if (vals == null)
-            return 0d;
-        else
+        //Double[] vals = profile.get(nucleotide);
+        //if (vals == null)
+          //  return 0d;
+        //else
             return profile.get(nucleotide)[i];
     }
 

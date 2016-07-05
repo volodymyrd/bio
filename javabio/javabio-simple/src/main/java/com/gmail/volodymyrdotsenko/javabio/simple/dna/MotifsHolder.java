@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * Holder for motifs
- *
+ * <p>
  * Created by Volodymyr Dotsenko on 04.07.16.
  */
 public class MotifsHolder {
@@ -28,7 +28,6 @@ public class MotifsHolder {
 
     private final List<String> motifs;
     private final NucleotidesCount[] nucleotidesCounts;
-    private final Map<DNANucleotide, Double[]> profile = new HashMap<>();
     private final int k;
 
     public MotifsHolder(int k) {
@@ -74,6 +73,11 @@ public class MotifsHolder {
     }
 
     public DNAProfileMatrix getProfileMatrix() {
+        Map<DNANucleotide, Double[]> profile = new HashMap<>();
+        for (DNANucleotide n : DNANucleotide.values()) {
+            profile.put(n, new Double[getWidth()]);
+        }
+
         for (int i = 0; i < nucleotidesCounts.length; i++) {
             for (Map.Entry<DNANucleotide, Long> e : nucleotidesCounts[i].counts.entrySet()) {
                 Double[] probs = profile.get(e.getKey());
