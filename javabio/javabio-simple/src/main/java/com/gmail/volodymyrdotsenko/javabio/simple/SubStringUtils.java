@@ -342,7 +342,11 @@ public class SubStringUtils {
         return result;
     }
 
-    public static List<String> greedyMotifSearch(List<String> dnas, int k) {
+    public static List<String> greedyMotifSearch(List<String> dnas, int k, boolean pseudocounts) {
+        int pseudocountValue = 0;
+        if (pseudocounts)
+            pseudocountValue = 1;
+
         MotifsHolder bestMotifs = new MotifsHolder(k);
         for (String dna : dnas) {
             bestMotifs.add(dna.substring(0, k));
@@ -354,11 +358,11 @@ public class SubStringUtils {
             String motif = dna0.substring(i, i + k);
 
             MotifsHolder motifs = new MotifsHolder(k).add(motif);
-            DNAProfileMatrix profile = motifs.getProfileMatrix();
+            DNAProfileMatrix profile = motifs.getProfileMatrix(pseudocountValue);
 
             for (int j = 1; j < dnas.size(); j++) {
                 motifs.add(findProfileMostProbableKmer(dnas.get(j), k, profile));
-                profile = motifs.getProfileMatrix();
+                profile = motifs.getProfileMatrix(pseudocountValue);
             }
 
             if (motifs.score() < bestMotifs.score())

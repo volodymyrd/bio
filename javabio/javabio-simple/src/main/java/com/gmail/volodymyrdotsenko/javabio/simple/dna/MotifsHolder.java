@@ -72,7 +72,7 @@ public class MotifsHolder {
         return motifs;
     }
 
-    public DNAProfileMatrix getProfileMatrix() {
+    public DNAProfileMatrix getProfileMatrix(int pseudocountValue) {
         Map<DNANucleotide, Double[]> profile = new HashMap<>();
         for (DNANucleotide n : DNANucleotide.values()) {
             profile.put(n, new Double[getWidth()]);
@@ -96,11 +96,13 @@ public class MotifsHolder {
         }
 
         profile.values().forEach(v -> {
-            for (int i = 0; i < v.length; i++)
+            for (int i = 0; i < v.length; i++) {
                 if (v[i] == null)
                     v[i] = 0d;
-                else
-                    v[i] /= getHeight();
+
+                v[i] += pseudocountValue;
+                v[i] /= getHeight();
+            }
         });
 
         return new DNAProfileMatrix(profile);

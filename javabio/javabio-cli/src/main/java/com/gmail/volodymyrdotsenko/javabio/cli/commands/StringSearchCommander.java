@@ -251,14 +251,16 @@ public class StringSearchCommander extends BaseCommander {
     public String greedyMotifSearch(
             @CliOption(key = {"dnasFileName"}, mandatory = true, help = "File contains of collection of strings Dna")
                     String dnasFileName,
-            @CliOption(key = {"k"}, mandatory = true, help = "An integer k") Integer k) {
+            @CliOption(key = {"k"}, mandatory = true, help = "An integer k") Integer k,
+            @CliOption(key = {"pseudocounts"}, mandatory = false, help = "GreedyMotifSearch with pseudocounts",
+                    unspecifiedDefaultValue = "false") Boolean pseudocounts) {
 
         String t = null, p = null;
 
         try {
             List<String> list = FileUtils.getListFromFile(dnasFileName);
 
-            return SubStringUtils.greedyMotifSearch(list, k)
+            return SubStringUtils.greedyMotifSearch(list, k, pseudocounts)
                     .stream().map(e -> e).collect(Collectors.joining("\n\r"));
         } catch (IOException e) {
             LOGGER.severe(e.getMessage());

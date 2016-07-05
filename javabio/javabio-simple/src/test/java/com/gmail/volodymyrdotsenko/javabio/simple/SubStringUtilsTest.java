@@ -256,14 +256,14 @@ public class SubStringUtilsTest {
     public void testGreedyMotifSearch() {
         assertEquals("[CAG, CAG, CAA, CAA, CAA]", SubStringUtils.greedyMotifSearch(
                 Stream.of("GGCGTTCAGGCA", "AAGAATCAGTCA", "CAAGGAGTTCGC", "CACGTCAATCAC", "CAATAATATTCG")
-                        .collect(Collectors.toList()), 3).toString());
+                        .collect(Collectors.toList()), 3, false).toString());
     }
 
     @Test
     public void testGreedyMotifSearchPicksTheFirstOccurring() {
         assertEquals("[GCC, GCC, AAC, TTC]", SubStringUtils.greedyMotifSearch(
                 Stream.of("GCCCAA", "GGCCTG", "AACCTA", "TTCCTT")
-                        .collect(Collectors.toList()), 3).toString());
+                        .collect(Collectors.toList()), 3, false).toString());
     }
 
     @Test
@@ -274,6 +274,13 @@ public class SubStringUtilsTest {
                         "GCGCCAGTAACCCGTGCCAGTCAGGTTAATGGCAGTAACATTT",
                         "AACCCGTGCCAGTCAGGTTAATGGCAGTAACATTTATGCCTTC",
                         "ATGCCTTCCGCGCCAATTGTTCGTATCGTCGCCACTTCGAGTG")
-                        .collect(Collectors.toList()), 6).toString());
+                        .collect(Collectors.toList()), 6, false).toString());
+    }
+
+    @Test
+    public void testGreedyMotifSearchWithPseudoCounts() {
+        assertEquals("[TTC, ATC, TTC, ATC, TTC]", SubStringUtils.greedyMotifSearch(
+                Stream.of("GGCGTTCAGGCA", "AAGAATCAGTCA", "CAAGGAGTTCGC", "CACGTCAATCAC", "CAATAATATTCG")
+                        .collect(Collectors.toList()), 3, true).toString());
     }
 }
