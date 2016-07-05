@@ -371,4 +371,21 @@ public class SubStringUtils {
 
         return bestMotifs.getMotifs();
     }
+
+    public static long distanceBetweenPatternAndStrings(String pattern, List<String> dnas) {
+        long distance = 0;
+        int k = pattern.length();
+        for (String dna : dnas) {
+            int min = Integer.MAX_VALUE;
+            KmerIterator iterator = new KmerIterator(dna, k);
+            while (iterator.hasNext()) {
+                int d = hammingDistance(pattern, iterator.next());
+                if (d < min)
+                    min = d;
+            }
+            distance += min;
+        }
+
+        return distance;
+    }
 }

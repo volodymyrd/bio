@@ -268,4 +268,24 @@ public class StringSearchCommander extends BaseCommander {
             return "";
         }
     }
+
+    @CliCommand(value = {"distanceBetweenPatternAndStrings"},
+            help = "distances between Pattern and each string in Dna = {Dna1, ..., Dnat}")
+    public Long distanceBetweenPatternAndStrings(
+            @CliOption(key = {"dnasFileName"}, mandatory = true, help = "File contains of collection of strings Dna")
+                    String dnasFileName,
+            @CliOption(key = {"pattern"}, mandatory = true, help = "pattern") String pattern) {
+
+        String t = null, p = null;
+
+        try {
+            List<String> list = FileUtils.getListFromFile(dnasFileName);
+
+            return SubStringUtils.distanceBetweenPatternAndStrings(pattern, list);
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+
+            return -1L;
+        }
+    }
 }

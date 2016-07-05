@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Volodymyr Dotsenko on 6/19/16.
@@ -282,5 +282,37 @@ public class SubStringUtilsTest {
         assertEquals("[TTC, ATC, TTC, ATC, TTC]", SubStringUtils.greedyMotifSearch(
                 Stream.of("GGCGTTCAGGCA", "AAGAATCAGTCA", "CAAGGAGTTCGC", "CACGTCAATCAC", "CAATAATATTCG")
                         .collect(Collectors.toList()), 3, true).toString());
+    }
+
+    @Test
+    public void testDistanceBetweenPatternAndStrings() {
+        assertEquals(5, SubStringUtils.distanceBetweenPatternAndStrings("AAA",
+                Stream.of("TTACCTTAAC", "GATATCTGTC", "ACGGCGTTCG", "CCCTAAAGAG", "CGTCAGAGGT")
+                        .collect(Collectors.toList())));
+    }
+
+    @Test
+    public void testGetProfileKmerProbability(){
+        DNAProfileMatrix.Builder builder = new DNAProfileMatrix.Builder();
+        builder.add(DNANucleotide.A, "0.4 0.3 0.0 0.1 0.0 0.9");
+        builder.add(DNANucleotide.C, "0.2 0.3 0.0 0.4 0.0 0.1");
+        builder.add(DNANucleotide.G, "0.1 0.3 1.0 0.1 0.5 0.0");
+        builder.add(DNANucleotide.T, "0.3 0.1 0.0 0.4 0.5 0.0");
+        System.out.println(SubStringUtils.getProfileKmerProbability("AAGTTC", builder.getDNAProfileMatrix()));
+    }
+
+    @Test
+    public void testGetProfileKmerProbability1(){
+        DNAProfileMatrix.Builder builder = new DNAProfileMatrix.Builder();
+        builder.add(DNANucleotide.A, "0.4 0.3 0.0 0.1 0.0 0.9");
+        builder.add(DNANucleotide.C, "0.2 0.3 0.0 0.4 0.0 0.1");
+        builder.add(DNANucleotide.G, "0.1 0.3 1.0 0.1 0.5 0.0");
+        builder.add(DNANucleotide.T, "0.3 0.1 0.0 0.4 0.5 0.0");
+        System.out.println(SubStringUtils.getProfileKmerProbability("ACGCGA", builder.getDNAProfileMatrix()));
+        System.out.println(SubStringUtils.getProfileKmerProbability("AAGTGA", builder.getDNAProfileMatrix()));
+        System.out.println(SubStringUtils.getProfileKmerProbability("AGGTGA", builder.getDNAProfileMatrix()));
+        System.out.println(SubStringUtils.getProfileKmerProbability("ACGTTT", builder.getDNAProfileMatrix()));
+        System.out.println(SubStringUtils.getProfileKmerProbability("AAGCCA", builder.getDNAProfileMatrix()));
+        System.out.println(SubStringUtils.getProfileKmerProbability("AGGTCA", builder.getDNAProfileMatrix()));
     }
 }
