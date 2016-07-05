@@ -315,16 +315,16 @@ public class SubStringUtils {
     }
 
     public static double getProfileKmerProbability(String kmer, DNAProfileMatrix profile) {
-        double p = 0;
+        double p = 1;
         for (int j = 0; j < kmer.length(); j++) {
-            p += profile.getProbability(j, DNANucleotide.valueOf(kmer.charAt(j)));
+            p *= profile.getProbability(j, DNANucleotide.valueOf(kmer.charAt(j)));
         }
 
         return p;
     }
 
     public static String findProfileMostProbableKmer(String text, int k, DNAProfileMatrix profile) {
-        String result = "";
+        String result = text.substring(0, k);
 
         int n = text.length();
         double max = 0;
@@ -333,7 +333,7 @@ public class SubStringUtils {
             String kmer = iterator.next();
             double p = getProfileKmerProbability(kmer, profile);
 
-            if (p >= max) {
+            if (p > max) {
                 max = p;
                 result = kmer;
             }
@@ -347,8 +347,6 @@ public class SubStringUtils {
         for (String dna : dnas) {
             bestMotifs.add(dna.substring(0, k));
         }
-
-        //System.out.println(bestMotifs.score());
 
         String dna0 = dnas.get(0);
 
@@ -365,8 +363,6 @@ public class SubStringUtils {
 
             if (motifs.score() < bestMotifs.score())
                 bestMotifs = motifs;
-
-            System.out.println(bestMotifs.score() + " " + bestMotifs.getMotifs());
         }
 
         return bestMotifs.getMotifs();

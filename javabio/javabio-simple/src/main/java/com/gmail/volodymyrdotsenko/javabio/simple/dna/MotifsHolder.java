@@ -60,11 +60,11 @@ public class MotifsHolder {
         return this;
     }
 
-    public int getWidth() {
+    private int getWidth() {
         return k;
     }
 
-    public int getHeight() {
+    private int getHeight() {
         return motifs.size();
     }
 
@@ -108,8 +108,8 @@ public class MotifsHolder {
 
     public long score() {
         long score = 0;
-        for (int i = 0; i < nucleotidesCounts.length; i++) {
-            score += (getHeight() - nucleotidesCounts[i].counts.values().stream().max(Long::compare).get());
+        for (NucleotidesCount nucleotidesCount : nucleotidesCounts) {
+            score += (getHeight() - nucleotidesCount.counts.values().stream().max(Long::compare).get());
         }
 
         return score;

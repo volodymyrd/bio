@@ -246,4 +246,24 @@ public class StringSearchCommander extends BaseCommander {
             return "";
         }
     }
+
+    @CliCommand(value = {"greedyMotifSearch"}, help = "call GreedyMotifSearch")
+    public String greedyMotifSearch(
+            @CliOption(key = {"dnasFileName"}, mandatory = true, help = "File contains of collection of strings Dna")
+                    String dnasFileName,
+            @CliOption(key = {"k"}, mandatory = true, help = "An integer k") Integer k) {
+
+        String t = null, p = null;
+
+        try {
+            List<String> list = FileUtils.getListFromFile(dnasFileName);
+
+            return SubStringUtils.greedyMotifSearch(list, k)
+                    .stream().map(e -> e).collect(Collectors.joining("\n\r"));
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+
+            return "";
+        }
+    }
 }
