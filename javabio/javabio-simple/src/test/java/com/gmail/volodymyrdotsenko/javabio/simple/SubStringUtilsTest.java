@@ -292,7 +292,7 @@ public class SubStringUtilsTest {
     }
 
     @Test
-    public void testGetProfileKmerProbability(){
+    public void testGetProfileKmerProbability() {
         DNAProfileMatrix.Builder builder = new DNAProfileMatrix.Builder();
         builder.add(DNANucleotide.A, "0.4 0.3 0.0 0.1 0.0 0.9");
         builder.add(DNANucleotide.C, "0.2 0.3 0.0 0.4 0.0 0.1");
@@ -302,7 +302,7 @@ public class SubStringUtilsTest {
     }
 
     @Test
-    public void testGetProfileKmerProbability1(){
+    public void testGetProfileKmerProbability1() {
         DNAProfileMatrix.Builder builder = new DNAProfileMatrix.Builder();
         builder.add(DNANucleotide.A, "0.4 0.3 0.0 0.1 0.0 0.9");
         builder.add(DNANucleotide.C, "0.2 0.3 0.0 0.4 0.0 0.1");
@@ -314,5 +314,27 @@ public class SubStringUtilsTest {
         System.out.println(SubStringUtils.getProfileKmerProbability("ACGTTT", builder.getDNAProfileMatrix()));
         System.out.println(SubStringUtils.getProfileKmerProbability("AAGCCA", builder.getDNAProfileMatrix()));
         System.out.println(SubStringUtils.getProfileKmerProbability("AGGTCA", builder.getDNAProfileMatrix()));
+    }
+
+    @Test
+    public void testMotifs() {
+        DNAProfileMatrix.Builder builder = new DNAProfileMatrix.Builder();
+        builder.add(DNANucleotide.A, "0.8 0 0 0.2");
+        builder.add(DNANucleotide.C, "0 0.6 0.2 0");
+        builder.add(DNANucleotide.G, "0.2 0.2 0.8 0");
+        builder.add(DNANucleotide.T, "0 0.2 0 0.8");
+
+        assertEquals("[acct, atgt, gcgt, acga, aggt]", SubStringUtils.motifs(builder.getDNAProfileMatrix(),
+                Stream.of("ttaccttaac", "gatgtctgtc", "acggcgttag", "ccctaacgag", "cgtcagaggt")
+                        .collect(Collectors.toList()), 4).getMotifs().toString());
+    }
+
+    @Test
+    public void testRandomizedMotifSearch() {
+        System.out.println(SubStringUtils.randomizedMotifSearch(
+                Stream.of("CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA", "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG",
+                        "TAGTACCGAGACCGAAAGAAGTATACAGGCGT", "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC",
+                        "AATCCACCAGCTCCACGTGCAATGTTGGCCTA")
+                        .collect(Collectors.toList()), 8, 100));
     }
 }

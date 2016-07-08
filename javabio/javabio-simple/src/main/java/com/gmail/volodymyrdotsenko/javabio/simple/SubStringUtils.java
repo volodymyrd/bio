@@ -5,6 +5,7 @@ import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNAProfileMatrix;
 import com.gmail.volodymyrdotsenko.javabio.simple.dna.MotifsHolder;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -387,5 +388,35 @@ public class SubStringUtils {
         }
 
         return distance;
+    }
+
+    public static MotifsHolder motifs(DNAProfileMatrix profile, List<String> dnas, int k) {
+        MotifsHolder holder = new MotifsHolder(k);
+        dnas.forEach(dna -> {
+            holder.add(findProfileMostProbableKmer(dna, k, profile));
+        });
+        return holder;
+    }
+
+    public static List<String> randomizedMotifSearch(List<String> dnas, int k, int step) {
+        int pseudocountValue = 1;
+
+        MotifsHolder bestMotifs = new MotifsHolder(k);
+
+        while (step-- > 0) {
+            for (String dna : dnas) {
+                int i = ThreadLocalRandom.current().nextInt(0, dna.length() - k);
+                bestMotifs.add(dna.substring(i, k + i));
+            }
+
+            DNAProfileMatrix profile = bestMotifs.getProfileMatrix(pseudocountValue);
+
+            MotifsHolder motifs = motifs(profile, dnas, k);
+
+            if (motifs.score() < bestMotifs.score())
+                bestMotifs = motifs;
+        }
+
+        return bestMotifs.getMotifs();
     }
 }
