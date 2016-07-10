@@ -366,4 +366,31 @@ public class SubStringUtilsTest {
 
         assertTrue(theBestMotifsMap.keySet().contains(motifs));
     }
+
+    @Test
+    /**
+     * 1. Compute the probability that ten(N) randomly selected 15-mers (k) from the ten 600(L)-nucleotide long strings
+     * in the Subtle Motif Problem capture at least one implanted 15-mer.
+     *
+     * All possible k-mer = (L - k + 1)
+     * Prob find exactly one = 1 / (L - k +1)
+     *
+     * Prob find at least one (p0) = 1 - Prob not found any = 1 - (Prob not found any in one string)^N
+     * Prob not found any in one string = 1 - Prob find exactly one = 1 - 1 / (L - k +1)
+     *
+     * 2. Compute the probability that ten randomly selected 15-mers from ten 600-nucleotide long strings
+     * (as in the Subtle Motif Problem) capture at least two implanted 15-mers
+     *
+     * Prob find at least two implanted = 1 - p0 - prob find exactly one (p1)
+     *
+     * p1 = N * (1 / (L - k + 1)) * (1 - (1 / (L - k + 1)) ^ (N - 1))
+     */
+    public void compute1() {
+        double p0 = Math.pow(1 - 1.0 / 586, 10);
+        double p1 = Math.pow(585.0 / 586, 9) * 10.0 / 586;
+        //Answer for 1
+        System.out.println(1 - p0);
+        //Answer for 2
+        System.out.println(1 - p0 - p1);
+    }
 }
