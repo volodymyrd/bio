@@ -111,9 +111,28 @@ public class MotifsHolder {
     public long score() {
         long score = 0;
         for (NucleotidesCount nucleotidesCount : nucleotidesCounts) {
+            if (nucleotidesCount == null)
+                return Long.MAX_VALUE;
+
             score += (getHeight() - nucleotidesCount.counts.values().stream().max(Long::compare).get());
         }
 
         return score;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MotifsHolder that = (MotifsHolder) o;
+
+        return motifs.equals(that.motifs);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return motifs.hashCode();
     }
 }

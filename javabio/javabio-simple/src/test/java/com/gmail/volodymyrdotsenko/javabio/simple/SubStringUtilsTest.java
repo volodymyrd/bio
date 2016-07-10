@@ -2,6 +2,7 @@ package com.gmail.volodymyrdotsenko.javabio.simple;
 
 import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNANucleotide;
 import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNAProfileMatrix;
+import com.gmail.volodymyrdotsenko.javabio.simple.dna.MotifsHolder;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -331,10 +333,37 @@ public class SubStringUtilsTest {
 
     @Test
     public void testRandomizedMotifSearch() {
-        System.out.println(SubStringUtils.randomizedMotifSearch(
+        assertEquals("[TCTCGGGG, CCAAGGTG, TACAGGCG, TTCAGGTG, TCCACGTG]", SubStringUtils.randomizedMotifSearch(
                 Stream.of("CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA", "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG",
                         "TAGTACCGAGACCGAAAGAAGTATACAGGCGT", "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC",
                         "AATCCACCAGCTCCACGTGCAATGTTGGCCTA")
-                        .collect(Collectors.toList()), 8, 100));
+                        .collect(Collectors.toList()), 8, 100, 50).toString());
+    }
+
+    @Test
+    public void testRandomizedMotifSearchCheckBeginning() {
+        assertEquals("[CGATAA, GGTTAA, GGTATA, GGTTAA, GGTTAC, GGTTAA, GGCCAA, GGTTAA]", SubStringUtils.randomizedMotifSearch(
+                Stream.of("AATTGGCACATCATTATCGATAACGATTCGCCGCATTGCC", "GGTTAACATCGAATAACTGACACCTGCTCTGGCACCGCTC",
+                        "AATTGGCGGCGGTATAGCCAGATAGTGCCAATAATTTCCT", "GGTTAATGGTGAAGTGTGGGTTATGGGGAAAGGCAGACTG",
+                        "AATTGGACGGCAACTACGGTTACAACGCAGCAAGAATATT", "GGTTAACTGTTGTTGCTAACACCGTTAAGCGACGGCAACT",
+                        "AATTGGCCAACGTAGGCGCGGCTTGGCATCTCGGTGTGTG", "GGTTAAAAGGCGCATCTTACTCTTTTCGCTTTCAAAAAAA")
+                        .collect(Collectors.toList()), 6, 1000, 1).toString());
+    }
+
+    @Test
+    public void testRandomizedMotifSearchCheckEnding() {
+        Map<MotifsHolder, Integer> theBestMotifsMap = new HashMap<>();
+
+        SubStringUtils.randomizedMotifSearch(Stream.of("GCACATCATTAAACGATTCGCCGCATTGCCTCGATTAACC", "TCATAACTGACACCTGCTCTGGCACCGCTCATCCAAGGCC",
+                "AAGCGGGTATAGCCAGATAGTGCCAATAATTTCCTTAACC", "AGTCGGTGGTGAAGTGTGGGTTATGGGGAAAGGCAAGGCC",
+                "AACCGGACGGCAACTACGGTTACAACGCAGCAAGTTAACC", "AGGCGTCTGTTGTTGCTAACACCGTTAAGCGACGAAGGCC",
+                "AAGCTTCCAACATCGTCTTGGCATCTCGGTGTGTTTAACC", "AATTGAACATCTTACTCTTTTCGCTTTCAAAAAAAAGGCC")
+                .collect(Collectors.toList()), 6, 100, 10, theBestMotifsMap);
+
+        MotifsHolder motifs = new MotifsHolder(6, Stream.of("TTAACC", "ATAACT", "TTAACC", "TGAAGT",
+                "TTAACC", "TTAAGC", "TTAACC", "TGAACA")
+                .collect(Collectors.toList()));
+
+        assertTrue(theBestMotifsMap.keySet().contains(motifs));
     }
 }

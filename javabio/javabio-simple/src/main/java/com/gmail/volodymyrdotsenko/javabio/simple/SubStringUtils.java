@@ -398,25 +398,65 @@ public class SubStringUtils {
         return holder;
     }
 
-    public static List<String> randomizedMotifSearch(List<String> dnas, int k, int step) {
+    public static List<String> randomizedMotifSearch(List<String> dnas, int k, int steps, int attempts) {
+        Map<MotifsHolder, Integer> theBestMotifsMap = new HashMap<>();
+
+        int max = randomizedMotifSearch(dnas, k, steps, attempts, theBestMotifsMap);
+
+        return theBestMotifsMap.entrySet().stream()
+                .filter(e -> e.getValue() >= max)
+                .findFirst().get().getKey()
+                .getMotifs();
+    }
+
+    public static int randomizedMotifSearch(List<String> dnas, int k, int steps, int attempts,
+                                            Map<MotifsHolder, Integer> theBestMotifsMap) {
         int pseudocountValue = 1;
 
-        MotifsHolder bestMotifs = new MotifsHolder(k);
+        int max = 0;
 
-        while (step-- > 0) {
-            for (String dna : dnas) {
-                int i = ThreadLocalRandom.current().nextInt(0, dna.length() - k);
-                bestMotifs.add(dna.substring(i, k + i));
+        while (attempts-- > 0) {
+            MotifsHolder theBestMotifs = new MotifsHolder(k);
+
+            int st = steps;
+            while (st-- > 0) {
+                MotifsHolder bestMotifs = new MotifsHolder(k);
+
+                for (String dna : dnas) {
+                    int i = ThreadLocalRandom.current().nextInt(0, dna.length() - k);
+                    bestMotifs.add(dna.substring(i, k + i));
+                }
+
+                for (; ; ) {
+                    DNAProfileMatrix profile = bestMotifs.getProfileMatrix(pseudocountValue);
+
+                    MotifsHolder motifs = motifs(profile, dnas, k);
+
+                    if (motifs.score() < bestMotifs.score())
+                        bestMotifs = motifs;
+                    else
+                        break;
+                }
+
+                if (bestMotifs.score() < theBestMotifs.score())
+                    theBestMotifs = bestMotifs;
             }
 
-            DNAProfileMatrix profile = bestMotifs.getProfileMatrix(pseudocountValue);
+            Integer num = theBestMotifsMap.get(theBestMotifs);
 
-            MotifsHolder motifs = motifs(profile, dnas, k);
+            if (num == null) {
+                num = 1;
+            } else {
+                ++num;
+            }
 
-            if (motifs.score() < bestMotifs.score())
-                bestMotifs = motifs;
+            theBestMotifsMap.put(theBestMotifs, num);
+
+            if (max < num) {
+                max = num;
+            }
         }
 
-        return bestMotifs.getMotifs();
+        return max;
     }
 }

@@ -247,7 +247,7 @@ public class StringSearchCommander extends BaseCommander {
         }
     }
 
-    @CliCommand(value = {"greedyMotifSearch"}, help = "call GreedyMotifSearch")
+    @CliCommand(value = {"greedyMotifSearch"}, help = "Call Greedy Motif Search")
     public String greedyMotifSearch(
             @CliOption(key = {"dnasFileName"}, mandatory = true, help = "File contains of collection of strings Dna")
                     String dnasFileName,
@@ -286,6 +286,28 @@ public class StringSearchCommander extends BaseCommander {
             LOGGER.severe(e.getMessage());
 
             return -1L;
+        }
+    }
+
+    @CliCommand(value = {"randomizedMotifSearch"}, help = "Call Randomized Motif Search")
+    public String randomizedMotifSearch(
+            @CliOption(key = {"dnasFileName"}, mandatory = true, help = "File contains of collection of strings Dna")
+                    String dnasFileName,
+            @CliOption(key = {"k"}, mandatory = true, help = "An integer k") Integer k,
+            @CliOption(key = {"step"}, mandatory = true, help = "An integer k") Integer step,
+            @CliOption(key = {"attempts"}, mandatory = true, help = "An integer k") Integer attempts) {
+
+        String t = null, p = null;
+
+        try {
+            List<String> list = FileUtils.getListFromFile(dnasFileName);
+
+            return SubStringUtils.randomizedMotifSearch(list, k, step, attempts)
+                    .stream().map(e -> e).collect(Collectors.joining("\n\r"));
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+
+            return "";
         }
     }
 }
