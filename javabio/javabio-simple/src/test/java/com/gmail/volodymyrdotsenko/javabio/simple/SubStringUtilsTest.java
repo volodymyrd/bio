@@ -407,4 +407,13 @@ public class SubStringUtilsTest {
         assertEquals(9, motifsHolder.score());
         assertEquals("[TCTCGGGG, CCAAGGTG, TACAGGCG, TTCAGGTG, TCCACGTG]", motifsHolder.getMotifs().toString());
     }
+
+    @Test
+    public void test1(){
+        MotifsHolder bestMotifs = new MotifsHolder(3);
+        bestMotifs.add("TGA").add("GTT").add("GAA").add("TGT");
+        System.out.print(SubStringUtils.motifs(bestMotifs.getProfileMatrix(0), Stream
+                .of("TGACGTTC", "TAAGAGTT", "GGACGAAA", "CTGTTCGC")
+                .collect(Collectors.toList()), 3).getMotifs());
+    }
 }
