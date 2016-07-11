@@ -3,6 +3,7 @@ package com.gmail.volodymyrdotsenko.javabio.simple;
 import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNANucleotide;
 import com.gmail.volodymyrdotsenko.javabio.simple.dna.DNAProfileMatrix;
 import com.gmail.volodymyrdotsenko.javabio.simple.dna.MotifsHolder;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -331,6 +332,7 @@ public class SubStringUtilsTest {
                         .collect(Collectors.toList()), 4).getMotifs().toString());
     }
 
+    @Ignore
     @Test
     public void testRandomizedMotifSearch() {
         assertEquals("[TCTCGGGG, CCAAGGTG, TACAGGCG, TTCAGGTG, TCCACGTG]", SubStringUtils.randomizedMotifSearch(
@@ -392,5 +394,17 @@ public class SubStringUtilsTest {
         System.out.println(1 - p0);
         //Answer for 2
         System.out.println(1 - p0 - p1);
+    }
+
+    @Test
+    public void testGibbsSampler() {
+        MotifsHolder motifsHolder = SubStringUtils.gibbsSampler(
+                Stream.of("CGCCCCTCTCGGGGGTGTTCAGTAACCGGCCA", "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG",
+                        "TAGTACCGAGACCGAAAGAAGTATACAGGCGT", "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC",
+                        "AATCCACCAGCTCCACGTGCAATGTTGGCCTA")
+                        .collect(Collectors.toList()), 8, 500, 100);
+
+        assertEquals(9, motifsHolder.score());
+        assertEquals("[TCTCGGGG, CCAAGGTG, TACAGGCG, TTCAGGTG, TCCACGTG]", motifsHolder.getMotifs().toString());
     }
 }

@@ -423,7 +423,7 @@ public class SubStringUtils {
                 MotifsHolder bestMotifs = new MotifsHolder(k);
 
                 for (String dna : dnas) {
-                    int i = ThreadLocalRandom.current().nextInt(0, dna.length() - k);
+                    int i = ThreadLocalRandom.current().nextInt(0, dna.length() - k + 1);
                     bestMotifs.add(dna.substring(i, k + i));
                 }
 
@@ -458,5 +458,50 @@ public class SubStringUtils {
         }
 
         return max;
+    }
+
+    public static MotifsHolder gibbsSampler(List<String> dnas, int k, int steps, int attempts) {
+        int pseudocountValue = 1;
+
+        int minScore = Integer.MAX_VALUE;
+
+        MotifsHolder theBestMotifs = null;
+
+        while (attempts-- > 0) {
+            MotifsHolder bestMotifs = new MotifsHolder(k);
+
+            for (String dna : dnas) {
+                int i = ThreadLocalRandom.current().nextInt(0, dna.length() - k + 1);
+                bestMotifs.add(dna.substring(i, k + i));
+            }
+
+            int st = steps;
+            long bestScore = Integer.MAX_VALUE;
+            while (st-- > 0) {
+                int i = ThreadLocalRandom.current().nextInt(0, dnas.size());
+                List<String> old = new LinkedList<>(bestMotifs.getMotifs());
+                old.remove(i);
+                MotifsHolder motifs = new MotifsHolder(k, old);
+                String motif = findProfileMostProbableKmer(dnas.get(i), k, motifs.getProfileMatrix(pseudocountValue));
+                old.add(i, motif);
+                motifs = new MotifsHolder(k, old);
+
+                long motifScore = motifs.score();
+                bestScore = bestMotifs.score();
+
+                if (motifScore < bestScore) {
+                    bestMotifs = motifs;
+                    bestScore = motifScore;
+                }
+            }
+
+            if (bestScore < minScore) {
+                minScore = (int) bestScore;
+
+                theBestMotifs = bestMotifs;
+            }
+        }
+
+        return theBestMotifs;
     }
 }

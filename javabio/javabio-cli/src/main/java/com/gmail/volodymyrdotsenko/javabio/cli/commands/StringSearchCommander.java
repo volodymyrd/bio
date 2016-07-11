@@ -2,6 +2,7 @@ package com.gmail.volodymyrdotsenko.javabio.cli.commands;
 
 import com.gmail.volodymyrdotsenko.javabio.cli.utils.FileUtils;
 import com.gmail.volodymyrdotsenko.javabio.simple.SubStringUtils;
+import com.gmail.volodymyrdotsenko.javabio.simple.dna.MotifsHolder;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.shell.support.logging.HandlerUtils;
@@ -294,8 +295,8 @@ public class StringSearchCommander extends BaseCommander {
             @CliOption(key = {"dnasFileName"}, mandatory = true, help = "File contains of collection of strings Dna")
                     String dnasFileName,
             @CliOption(key = {"k"}, mandatory = true, help = "An integer k") Integer k,
-            @CliOption(key = {"step"}, mandatory = true, help = "An integer k") Integer step,
-            @CliOption(key = {"attempts"}, mandatory = true, help = "An integer k") Integer attempts) {
+            @CliOption(key = {"step"}, mandatory = true, help = "Number of steps") Integer step,
+            @CliOption(key = {"attempts"}, mandatory = true, help = "Number of attempts") Integer attempts) {
 
         String t = null, p = null;
 
@@ -304,6 +305,29 @@ public class StringSearchCommander extends BaseCommander {
 
             return SubStringUtils.randomizedMotifSearch(list, k, step, attempts)
                     .stream().map(e -> e).collect(Collectors.joining("\n\r"));
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+
+            return "";
+        }
+    }
+
+    @CliCommand(value = {"gibbsSampler"}, help = "Call Gibbs Sampler")
+    public String gibbsSampler(
+            @CliOption(key = {"dnasFileName"}, mandatory = true, help = "File contains of collection of strings Dna")
+                    String dnasFileName,
+            @CliOption(key = {"k"}, mandatory = true, help = "An integer k") Integer k,
+            @CliOption(key = {"step"}, mandatory = true, help = "Number of steps") Integer step,
+            @CliOption(key = {"attempts"}, mandatory = true, help = "Number of attempts") Integer attempts) {
+
+        String t = null, p = null;
+
+        try {
+            List<String> list = FileUtils.getListFromFile(dnasFileName);
+            MotifsHolder motifsHolder = SubStringUtils.gibbsSampler(list, k, step, attempts);
+            return "Score: " + motifsHolder.score() + "\n\r" + "Motifs:\n\r" +
+                    motifsHolder.getMotifs()
+                            .stream().map(e -> e).collect(Collectors.joining("\n\r"));
         } catch (IOException e) {
             LOGGER.severe(e.getMessage());
 
