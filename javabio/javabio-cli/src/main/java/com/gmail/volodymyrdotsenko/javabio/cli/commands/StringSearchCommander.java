@@ -189,6 +189,43 @@ public class StringSearchCommander extends BaseCommander {
                     .stream().map(e -> e.toString()).collect(Collectors.joining(" "));
     }
 
+    @CliCommand(value = {"composition"}, help = "Find all k-mer substrings of Text (including repeated k-mers)")
+    public String composition(
+            @CliOption(key = {"text"}, mandatory = false, help = "Text") String text,
+            @CliOption(key = {"textFileName"}, mandatory = false, help = "File name contains text") String textFileName,
+            @CliOption(key = {"k"}, help = "Length of k-mer") Integer k,
+            @CliOption(key = {"outputFileName"}, mandatory = false,
+                    help = "File name contains output") String outputFileName) {
+
+        if (isEmpty(text) && isEmpty(textFileName)) {
+            LOGGER.severe("You must set either 'text' or 'textFileName' parameter!");
+
+            return "Wrong input parameters";
+        }
+
+        String t = null;
+
+        t = extractText(text, textFileName);
+        if (isEmpty(t))
+            return "";
+
+        if (isEmpty(outputFileName))
+            return SubStringUtils.getKmers(t, k)
+                    .stream().sorted().map(e -> e.toString()).collect(Collectors.joining("\n\r"));
+        else {
+            try {
+                saveTextFile(outputFileName, String.valueOf(SubStringUtils.getKmers(t, k)
+                        .stream().sorted().map(e -> e.toString()).collect(Collectors.joining("\r"))));
+
+                return "File " + outputFileName + " created!";
+            } catch (FileNotFoundException e) {
+                LOGGER.severe(e.getMessage());
+            }
+
+            return "Error creating a file";
+        }
+    }
+
     @CliCommand(value = {"neighbors"}, help = "Find the d-neighborhood of a string")
     public String neighbors(
             @CliOption(key = {"text"}, mandatory = false, help = "Text") String text,

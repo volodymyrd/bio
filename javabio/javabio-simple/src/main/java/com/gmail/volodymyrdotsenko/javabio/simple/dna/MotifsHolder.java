@@ -101,7 +101,9 @@ public class MotifsHolder {
                     v[i] = 0d;
 
                 v[i] += pseudocountValue;
-                v[i] /= getHeight();
+                //Since you add +pseudocountValue to all getHeight() bases,
+                // in every column you add +getHeight() to the total count, so the fractions adds 1
+                v[i] /= (getHeight() + pseudocountValue * getHeight());
             }
         });
 
