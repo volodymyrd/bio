@@ -29,12 +29,16 @@ public class GraphUtilsTest {
                 .addEdge(7, 8)
                 .addEdge(9, 11)
                 .addEdge(5, 3)
-                .addEdge(0, 5)
                 .toGraph();
     }
 
     @Test
     public void shouldReturnDegree() {
-        assertEquals(5, GraphUtils.degree(graph, 0));
+        assertEquals(4, GraphUtils.degree(graph, 0));
+    }
+
+    @Test
+    public void shouldReturnMaxDegree() {
+        assertEquals(4, GraphUtils.maxDegree(graph));
     }
 }
