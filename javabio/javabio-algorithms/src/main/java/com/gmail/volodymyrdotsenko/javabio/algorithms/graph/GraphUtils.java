@@ -14,7 +14,7 @@ public class GraphUtils {
      * @param v - vertex
      * @return degree
      */
-    public static int degree(Graph g, int v) {
+    public static int degree(IGraph g, int v) {
         int degree = 0;
         for (int w : g.adj(v))
             degree++;
@@ -27,7 +27,7 @@ public class GraphUtils {
      * @param g - graph
      * @return maximum degree
      */
-    public static int maxDegree(Graph g) {
+    public static int maxDegree(IGraph g) {
         int max = 0;
         for (int v = 0; v < g.V(); v++) {
             int degree = degree(g, v);
@@ -43,7 +43,7 @@ public class GraphUtils {
      * @param g - graph
      * @return average degree
      */
-    public static double averageDegree(Graph g) {
+    public static double averageDegree(IGraph g) {
         return 2.0 * g.E() / g.V();
     }
 }

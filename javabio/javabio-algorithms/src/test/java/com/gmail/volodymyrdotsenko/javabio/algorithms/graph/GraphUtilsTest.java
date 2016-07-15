@@ -10,11 +10,11 @@ import static org.junit.Assert.*;
  */
 public class GraphUtilsTest {
 
-    private Graph graph;
+    private IGraph graph;
 
     @Before
     public void setUp() {
-        GraphBuilder builder = new GraphBuilder(13);
+        GraphBuilder builder = new GraphBuilder(13, GraphBuilder.GraphType.UNDIRECTED);
         graph = builder
                 .addEdge(0, 5)
                 .addEdge(4, 3)

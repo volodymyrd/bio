@@ -20,7 +20,7 @@ import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedStack;
  * @author Robert Sedgewick
  * @author Kevin Wayne
  */
-public class Graph {
+public class Graph implements IGraph{
     private final int V;                //number of vertices
     private int E;                      //number of edges
     private LinkedBag<Integer>[] adj;   //adjacency lists
@@ -67,6 +67,7 @@ public class Graph {
      *
      * @return the number of vertices in this graph
      */
+    @Override
     public int V() {
         return V;
     }
@@ -76,6 +77,7 @@ public class Graph {
      *
      * @return the number of edges in this graph
      */
+    @Override
     public int E() {
         return E;
     }
@@ -87,6 +89,7 @@ public class Graph {
      * @param w the other vertex in the edge
      * @throws IndexOutOfBoundsException unless both 0 <= v < V and 0 <= w < V
      */
+    @Override
     public void addEdge(int v, int w) {
         validateVertex(v);
         validateVertex(w);
@@ -102,6 +105,7 @@ public class Graph {
      * @return the vertices adjacent to vertex <tt>v</tt>, as an iterable
      * @throws IndexOutOfBoundsException unless 0 <= v < V
      */
+    @Override
     public Iterable<Integer> adj(int v) {
         validateVertex(v);
         return adj[v];

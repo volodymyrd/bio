@@ -6,13 +6,26 @@ package com.gmail.volodymyrdotsenko.javabio.algorithms.graph;
  * Created by Volodymyr Dotsenko on 13.07.16.
  */
 public class GraphBuilder {
-    private final Graph graph;
-
-    public GraphBuilder(int v) {
-        graph = new Graph(v);
+    public enum GraphType {
+        UNDIRECTED, DIRECTED
     }
 
-    public Graph toGraph() {
+    private final IGraph graph;
+
+    public GraphBuilder(int v, GraphType type) {
+        switch (type) {
+            case UNDIRECTED:
+                graph = new Graph(v);
+                break;
+            case DIRECTED:
+                graph = new Digraph(v);
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported graph type");
+        }
+    }
+
+    public IGraph toGraph() {
         return graph;
     }
 
