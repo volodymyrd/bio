@@ -1,4 +1,5 @@
 dependencies {
+    compile project(':javabio-algorithms')
     compile libs.apache_math3
     compile (libs.biojava){
         exclude group: 'org.apache.logging.log4j'
