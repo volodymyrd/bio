@@ -26,7 +26,7 @@ public interface IGraph {
      * @param w the head vertex
      * @throws IndexOutOfBoundsException unless both 0 <= v < V and 0 <= w < V
      */
-    void addEdge(int v, int w);
+    IGraph addEdge(int v, int w);
 
     /**
      * Returns the vertices adjacent to vertex <tt>v</tt>.

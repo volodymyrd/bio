@@ -1,5 +1,6 @@
 package com.gmail.volodymyrdotsenko.javabio.algorithms.graph;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,11 +9,16 @@ import java.util.Map;
  */
 public class SymbolDigraph extends Digraph {
 
-    private final Map<String, Integer> st = new HashMap<>();  // string -> index
-    //private final List<String> keys = new ArrayList<>();           // index  -> string
+    private final Map<String, Integer> st = new HashMap<>();    // string -> index
+    private String[] keys;                                      // index  -> string
+
+    public SymbolDigraph() {
+        keys = new String[0];
+    }
 
     public SymbolDigraph(int V) {
         super(V);
+        keys = new String[V];
     }
 
     /**
@@ -23,14 +29,19 @@ public class SymbolDigraph extends Digraph {
      * @throws IndexOutOfBoundsException unless both 0 <= v < V and 0 <= w < V
      */
     @Override
-    public void addEdge(int v, int w) {
+    public SymbolDigraph addEdge(int v, int w) {
         super.addEdge(v, w);
+
+        if (keys.length < V())
+            keys = Arrays.copyOf(keys, V());
 
         if (!st.containsKey(v))
             st.put(String.valueOf(v), st.size());
 
         if (!st.containsKey(w))
             st.put(String.valueOf(w), st.size());
+
+        return this;
     }
 
     /**
@@ -40,7 +51,7 @@ public class SymbolDigraph extends Digraph {
      * @param w the head vertex
      * @throws IndexOutOfBoundsException unless both 0 <= v < V and 0 <= w < V
      */
-    public void addEdge(String v, String w) {
+    public SymbolDigraph addEdge(String v, String w) {
 
         Integer iv = st.get(v);
         if (iv == null) {
@@ -51,10 +62,36 @@ public class SymbolDigraph extends Digraph {
         Integer iw = st.get(w);
         if (iw == null) {
             iw = st.size();
-            st.put(String.valueOf(v), iw);
+            st.put(String.valueOf(w), iw);
         }
 
+        int max = iv > iw ? iv : iw;
+
+        if (max >= keys.length) {
+            keys = Arrays.copyOf(keys, max + 1);
+        }
+
+        keys[iv] = v;
+        keys[iw] = w;
+
         super.addEdge(iv, iw);
+
+        return this;
+    }
+
+    public String toString(boolean printEmptyVertices, boolean sortedVertices) {
+        StringBuilder s = new StringBuilder();
+        s.append(V() + " vertices, " + E() + " edges " + NEWLINE);
+
+        if (sortedVertices)
+        for (String v : keys) {
+            s.append(String.format("%s -> ", v));
+            for (int w : adj(st.get(v))) {
+                s.append(String.format("%s ", keys[w]));
+            }
+            s.append(NEWLINE);
+        }
+        return s.toString();
     }
 
     /**
@@ -64,16 +101,6 @@ public class SymbolDigraph extends Digraph {
      * followed by the <em>V</em> adjacency lists
      */
     public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append(V() + " vertices, " + E() + " edges " + NEWLINE);
-        for (int v = 0; v < V(); v++) {
-            s.append(String.format("%d: ", v));
-            s.append("->");
-            for (int w : adj(v)) {
-                s.append(String.format("%d ", w));
-            }
-            s.append(NEWLINE);
-        }
-        return s.toString();
+        return toString(true, false);
     }
 }

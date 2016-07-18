@@ -3,6 +3,8 @@ package com.gmail.volodymyrdotsenko.javabio.algorithms.graph;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedBag;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedStack;
 
+import java.util.Arrays;
+
 /**
  * The <tt>Digraph</tt> class represents a directed graph of vertices
  * named 0 through <em>V</em> - 1.
@@ -20,11 +22,18 @@ import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedStack;
  * @author Robert Sedgewick
  * @author Kevin Wayne
  */
-public class Digraph implements IGraph {
-    private final int V;              // number of vertices in this digraph
-    private int E;                    // number of edges in this digraph
-    private LinkedBag<Integer>[] adj; // adj[v] = adjacency list for vertex v
+public class Digraph extends AbstractGraph {
     private int[] indegree;           // indegree[v] = indegree of vertex v
+
+    /**
+     * Initializes an empty digraph
+     */
+    public Digraph() {
+        this.E = 0;
+        indegree = new int[0];
+        adj = new LinkedBag[0];
+    }
+
 
     /**
      * Initializes an empty digraph with <em>V</em> vertices.
@@ -34,7 +43,6 @@ public class Digraph implements IGraph {
      */
     public Digraph(int V) {
         if (V < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
-        this.V = V;
         this.E = 0;
         indegree = new int[V];
         adj = new LinkedBag[V];
@@ -49,11 +57,11 @@ public class Digraph implements IGraph {
      * @param G the digraph to copy
      */
     public Digraph(Digraph G) {
-        this(G.V());
+        this(G.V);
         this.E = G.E();
         for (int v = 0; v < V; v++)
             this.indegree[v] = G.indegree(v);
-        for (int v = 0; v < G.V(); v++) {
+        for (int v = 0; v < G.V; v++) {
             // reverse so that adjacency list is in same order as original
             LinkedStack<Integer> reverse = new LinkedStack<Integer>();
             for (int w : G.adj[v]) {
@@ -86,12 +94,6 @@ public class Digraph implements IGraph {
     }
 
 
-    // throw an IndexOutOfBoundsException unless 0 <= v < V
-    private void validateVertex(int v) {
-        if (v < 0 || v >= V)
-            throw new IndexOutOfBoundsException("vertex " + v + " is not between 0 and " + (V - 1));
-    }
-
     /**
      * Adds the directed edge v->w to this digraph.
      *
@@ -100,12 +102,28 @@ public class Digraph implements IGraph {
      * @throws IndexOutOfBoundsException unless both 0 <= v < V and 0 <= w < V
      */
     @Override
-    public void addEdge(int v, int w) {
-        validateVertex(v);
-        validateVertex(w);
+    public Digraph addEdge(int v, int w) {
+
+        int max = v > w ? v : w;
+
+        if (max >= adj.length) {
+            adj = Arrays.copyOf(adj, max + 1);
+            for (int i = V; i <= max; i++)
+                adj[i] = new LinkedBag<Integer>();
+        }
+
         adj[v].add(w);
+
+        if (w >= indegree.length) {
+            indegree = Arrays.copyOf(indegree, w + 1);
+        }
+
         indegree[w]++;
+
         E++;
+        V = adj.length;
+
+        return this;
     }
 
     /**
@@ -117,7 +135,6 @@ public class Digraph implements IGraph {
      */
     @Override
     public Iterable<Integer> adj(int v) {
-        validateVertex(v);
         return adj[v];
     }
 
@@ -130,7 +147,6 @@ public class Digraph implements IGraph {
      * @throws IndexOutOfBoundsException unless 0 <= v < V
      */
     public int outdegree(int v) {
-        validateVertex(v);
         return adj[v].size();
     }
 
@@ -143,7 +159,6 @@ public class Digraph implements IGraph {
      * @throws IndexOutOfBoundsException unless 0 <= v < V
      */
     public int indegree(int v) {
-        validateVertex(v);
         return indegree[v];
     }
 

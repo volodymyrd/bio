@@ -28,7 +28,19 @@ public class SequencesUtil {
         return builder.toString();
     }
 
-    public SymbolDigraph overlapGraph(String[] texts) {
+    public static SymbolDigraph overlapGraph(String[] texts) {
+        SymbolDigraph digraph = new SymbolDigraph();
 
+        for (int i = 0; i < texts.length; i++)
+            for (int j = 0; j < texts.length; j++) {
+                if (i == j)
+                    continue;
+
+                if (suffix(texts[i]).equals(prefix(texts[j]))) {
+                    digraph.addEdge(texts[i], texts[j]);
+                }
+            }
+
+        return digraph;
     }
 }

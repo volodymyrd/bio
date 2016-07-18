@@ -144,4 +144,25 @@ public class SequencesCommander extends BaseCommander {
             return "";
         }
     }
+
+    @CliCommand(value = {"overlapGraph"}, help = "Solve the Overlap Graph Problem")
+    public String overlapGraph(
+            @CliOption(key = {"kmersFileName"}, mandatory = true, help = "File contains of a collection patterns of k-mers")
+                    String kmersFileName,
+            @CliOption(key = {"outputFileName"}, mandatory = true,
+                    help = "File name contains the overlap graph Overlap(Patterns), in the form of an adjacency list")
+                    String outputFileName) {
+
+        try {
+            List<String> list = FileUtils.getListFromFile(kmersFileName);
+
+            saveTextFile(outputFileName, SequencesUtil.overlapGraph(list.toArray(new String[list.size()])).toString());
+
+            return "File " + outputFileName + " created!";
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+        }
+
+        return "Error creating a file";
+    }
 }
