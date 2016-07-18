@@ -1,8 +1,6 @@
 package com.gmail.volodymyrdotsenko.javabio.algorithms.graph;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Volodymyr Dotsenko on 7/16/16.
@@ -83,14 +81,32 @@ public class SymbolDigraph extends Digraph {
         StringBuilder s = new StringBuilder();
         s.append(V() + " vertices, " + E() + " edges " + NEWLINE);
 
-        if (sortedVertices)
-        for (String v : keys) {
-            s.append(String.format("%s -> ", v));
-            for (int w : adj(st.get(v))) {
-                s.append(String.format("%s ", keys[w]));
+        if (sortedVertices) {
+            Set<String> sorted = new TreeSet<>(st.keySet());
+
+            for (String v : sorted) {
+                Iterable<Integer> it = adj(st.get(v));
+                if (printEmptyVertices || (!printEmptyVertices && it.iterator().hasNext())) {
+                    s.append(String.format("%s -> ", v));
+
+                    for (int w : adj(st.get(v))) {
+                        s.append(String.format("%s ", keys[w]));
+                    }
+                    s.append(NEWLINE);
+                }
             }
-            s.append(NEWLINE);
-        }
+        } else
+            for (String v : keys) {
+                Iterable<Integer> it = adj(st.get(v));
+                if (printEmptyVertices || (!printEmptyVertices && it.iterator().hasNext())) {
+                    s.append(String.format("%s -> ", v));
+
+                    for (int w : adj(st.get(v))) {
+                        s.append(String.format("%s ", keys[w]));
+                    }
+                    s.append(NEWLINE);
+                }
+            }
         return s.toString();
     }
 

@@ -156,7 +156,8 @@ public class SequencesCommander extends BaseCommander {
         try {
             List<String> list = FileUtils.getListFromFile(kmersFileName);
 
-            saveTextFile(outputFileName, SequencesUtil.overlapGraph(list.toArray(new String[list.size()])).toString());
+            saveTextFile(outputFileName, SequencesUtil.overlapGraph(list.toArray(new String[list.size()]))
+                    .toString(false, true));
 
             return "File " + outputFileName + " created!";
         } catch (IOException e) {
