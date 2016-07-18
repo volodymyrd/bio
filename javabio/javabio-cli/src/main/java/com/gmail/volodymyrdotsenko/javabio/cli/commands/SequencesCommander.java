@@ -1,13 +1,17 @@
 package com.gmail.volodymyrdotsenko.javabio.cli.commands;
 
+import com.gmail.volodymyrdotsenko.javabio.cli.utils.FileUtils;
 import com.gmail.volodymyrdotsenko.javabio.simple.BioJavaUtil;
+import com.gmail.volodymyrdotsenko.javabio.simple.SequencesUtil;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.shell.support.logging.HandlerUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Volodymyr Dotsenko on 6/20/16.
@@ -123,6 +127,21 @@ public class SequencesCommander extends BaseCommander {
             }
 
             return "Error creating a file";
+        }
+    }
+
+    @CliCommand(value = {"stringSpelledGenomePathProblem"}, help = "Solve the String Spelled by a Genome Path Problem")
+    public String stringSpelledGenomePathProblem(
+            @CliOption(key = {"dnasFileName"}, mandatory = true, help = "File contains of collection of strings Dna")
+                    String dnasFileName) {
+        try {
+            List<String> list = FileUtils.getListFromFile(dnasFileName);
+
+            return SequencesUtil.stringSpelledGenomePathProblem(list.toArray(new String[list.size()]));
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+
+            return "";
         }
     }
 }

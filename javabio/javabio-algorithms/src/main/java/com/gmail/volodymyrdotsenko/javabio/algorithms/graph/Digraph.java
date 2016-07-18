@@ -162,7 +162,7 @@ public class Digraph implements IGraph {
         return reverse;
     }
 
-    private static final String NEWLINE = System.getProperty("line.separator");
+    protected static final String NEWLINE = System.getProperty("line.separator");
 
     /**
      * Returns a string representation of the graph.
