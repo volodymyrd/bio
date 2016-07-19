@@ -2,6 +2,9 @@ package com.gmail.volodymyrdotsenko.javabio.simple;
 
 import com.gmail.volodymyrdotsenko.javabio.algorithms.graph.SymbolDigraph;
 
+import java.util.Arrays;
+import java.util.Set;
+
 /**
  * Created by Volodymyr Dotsenko on 12.07.16.
  */
@@ -42,5 +45,11 @@ public class SequencesUtil {
             }
 
         return digraph;
+    }
+
+
+    public static SymbolDigraph buildBruijnGraph(int k) {
+        Set<String> set = SubStringUtils.permutationsWithRepetitions(k, new char[]{'0', '1'});
+        return overlapGraph(set.toArray(new String[set.size()]));
     }
 }
