@@ -2,7 +2,8 @@ package com.gmail.volodymyrdotsenko.javabio.simple;
 
 import com.gmail.volodymyrdotsenko.javabio.algorithms.graph.SymbolDigraph;
 
-import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -51,5 +52,39 @@ public class SequencesUtil {
     public static SymbolDigraph buildBruijnGraph(int k) {
         Set<String> set = SubStringUtils.permutationsWithRepetitions(k, new char[]{'0', '1'});
         return overlapGraph(set.toArray(new String[set.size()]));
+    }
+
+    public static String findHamiltonianPathInBruijnGraph(int k) {
+        SymbolDigraph graph = buildBruijnGraph(k);
+
+        Deque<String> nodes = new LinkedList<>();
+
+        findPath(graph, graph.getKeys()[0], nodes);
+
+        return stringSpelledGenomePathProblem(nodes.toArray(new String[nodes.size()]));
+    }
+
+    private static boolean findPath(final SymbolDigraph graph, String v, final Deque<String> nodes) {
+        if (nodes.contains(v))
+            return false;
+
+        nodes.add(v);
+
+        if(nodes.size() == graph.V())
+            return true;
+
+        boolean flag = false;
+        for (String e : graph.adj(v)) {
+            flag = findPath(graph, e, nodes);
+            if (flag)
+                break;
+        }
+        if (!flag) {
+            nodes.removeLast();
+
+            return false;
+        }
+
+        return true;
     }
 }

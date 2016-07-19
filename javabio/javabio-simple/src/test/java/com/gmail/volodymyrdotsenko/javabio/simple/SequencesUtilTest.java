@@ -64,4 +64,14 @@ public class SequencesUtilTest {
                         .addEdge("11", "10"),
                 SequencesUtil.buildBruijnGraph(2));
     }
+
+    @Test
+    public void findHamiltonianPathInBruijnGraph2() throws Exception {
+        assertEquals("00110", SequencesUtil.findHamiltonianPathInBruijnGraph(2));
+    }
+
+    @Test
+    public void findHamiltonianPathInBruijnGraph3() throws Exception {
+        assertEquals("0000100110101111000", SequencesUtil.findHamiltonianPathInBruijnGraph(4));
+    }
 }

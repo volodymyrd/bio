@@ -1,5 +1,7 @@
 package com.gmail.volodymyrdotsenko.javabio.algorithms.graph;
 
+import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedBag;
+
 import java.util.*;
 
 /**
@@ -75,6 +77,26 @@ public class SymbolDigraph extends Digraph {
         super.addEdge(iv, iw);
 
         return this;
+    }
+
+    public Iterable<String> adj(String v) {
+        Iterable<Integer> it = super.adj(st.get(v));
+
+        LinkedBag<String> bag = new LinkedBag<>();
+
+        for (Integer i : it) {
+            bag.add(keys[i]);
+        }
+
+        return bag;
+    }
+
+    public Map<String, Integer> getSt() {
+        return st;
+    }
+
+    public String[] getKeys() {
+        return keys;
     }
 
     public String toString(boolean printEmptyVertices, boolean sortedVertices) {
