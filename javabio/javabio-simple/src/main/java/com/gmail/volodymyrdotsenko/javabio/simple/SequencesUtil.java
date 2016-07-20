@@ -54,6 +54,17 @@ public class SequencesUtil {
         return overlapGraph(set.toArray(new String[set.size()]));
     }
 
+    public static SymbolDigraph buildBruijnGraph(String text, int k) {
+        KmerIterator it = new KmerIterator(text, k);
+        SymbolDigraph digraph = new SymbolDigraph();
+        while (it.hasNext()) {
+            String kmer = it.next();
+            digraph.addEdge(prefix(kmer), suffix(kmer));
+
+        }
+        return digraph;
+    }
+
     public static String findHamiltonianPathInBruijnGraph(int k) {
         SymbolDigraph graph = buildBruijnGraph(k);
 
@@ -70,7 +81,7 @@ public class SequencesUtil {
 
         nodes.add(v);
 
-        if(nodes.size() == graph.V())
+        if (nodes.size() == graph.V())
             return true;
 
         boolean flag = false;
