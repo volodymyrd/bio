@@ -175,9 +175,29 @@ public class SequencesCommander extends BaseCommander {
                     String outputFileName) {
 
         try {
+            saveTextFile(outputFileName, SequencesUtil.buildBruijnGraph(text, k)
+                    .toString(false, true));
+
+            return "File " + outputFileName + " created!";
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+        }
+
+        return "Error creating a file";
+    }
+
+    @CliCommand(value = {"deBruijnGraphFromKmers"}, help = "Construct the de Bruijn graph from a set of k-mers")
+    public String deBruijnGraphFromKmers(
+            @CliOption(key = {"kmersFileName"}, mandatory = true, help = "File contains of a collection patterns of k-mers")
+                    String kmersFileName,
+            @CliOption(key = {"outputFileName"}, mandatory = true,
+                    help = "The adjacency list of the de Bruijn graph DeBruijn(Patterns)")
+                    String outputFileName) {
+
+        try {
             List<String> list = FileUtils.getListFromFile(kmersFileName);
 
-            saveTextFile(outputFileName, SequencesUtil.overlapGraph(list.toArray(new String[list.size()]))
+            saveTextFile(outputFileName, SequencesUtil.buildBruijnGraph(list.toArray(new String[list.size()]))
                     .toString(false, true));
 
             return "File " + outputFileName + " created!";

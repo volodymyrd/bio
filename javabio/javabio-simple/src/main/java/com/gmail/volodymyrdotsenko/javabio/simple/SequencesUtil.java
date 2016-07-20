@@ -65,6 +65,15 @@ public class SequencesUtil {
         return digraph;
     }
 
+    public static SymbolDigraph buildBruijnGraph(String[] texts) {
+        SymbolDigraph digraph = new SymbolDigraph();
+
+        for (int i = 0; i < texts.length; i++)
+            digraph.addEdge(prefix(texts[i]), suffix(texts[i]));
+
+        return digraph;
+    }
+
     public static String findHamiltonianPathInBruijnGraph(int k) {
         SymbolDigraph graph = buildBruijnGraph(k);
 

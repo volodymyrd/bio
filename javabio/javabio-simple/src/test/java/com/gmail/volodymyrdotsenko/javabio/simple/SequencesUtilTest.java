@@ -83,6 +83,20 @@ public class SequencesUtilTest {
     }
 
     @Test
+    public void buildBruijnGraphSeq2() throws Exception {
+        assertEquals(new SymbolDigraph()
+                        .addEdge("GAG", "AGG")
+                        .addEdge("CAG", "AGG")
+                        .addEdge("GGG", "GGG")
+                        .addEdge("GGG", "GGA")
+                        .addEdge("CAG", "AGG")
+                        .addEdge("AGG", "GGG")
+                        .addEdge("GGA", "GAG")
+                ,
+                SequencesUtil.buildBruijnGraph(new String[]{"GAGG", "CAGG", "GGGG", "GGGA", "CAGG", "AGGG", "GGAG"}));
+    }
+
+    @Test
     public void findHamiltonianPathInBruijnGraph2() throws Exception {
         assertEquals("00110", SequencesUtil.findHamiltonianPathInBruijnGraph(2));
     }

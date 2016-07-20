@@ -112,7 +112,7 @@ public class SymbolDigraph extends Digraph {
                     s.append(String.format("%s -> ", v));
 
                     for (int w : adj(st.get(v))) {
-                        s.append(String.format("%s, ", keys[w]));
+                        s.append(String.format("%s,", keys[w]));
                         //s.append(",");
                     }
                     s.deleteCharAt(s.lastIndexOf(","));
@@ -126,7 +126,7 @@ public class SymbolDigraph extends Digraph {
                     s.append(String.format("%s -> ", v));
 
                     for (int w : adj(st.get(v))) {
-                        s.append(String.format("%s, ", keys[w]));
+                        s.append(String.format("%s,", keys[w]));
                     }
                     s.deleteCharAt(s.lastIndexOf(","));
                     s.append(NEWLINE);
