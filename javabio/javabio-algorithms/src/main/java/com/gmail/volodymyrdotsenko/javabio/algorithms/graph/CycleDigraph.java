@@ -1,8 +1,8 @@
 package com.gmail.volodymyrdotsenko.javabio.algorithms.graph;
 
-import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedBag;
-
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Cycle oriented graph
@@ -53,8 +53,6 @@ public class CycleDigraph extends Digraph {
     }
 
     private final Set<Edge> edges = new HashSet<>();
-    private final Map<Integer, Set<Edge>> edgesOfVertex = new HashMap<>();
-    private final List<LinkedBag<Integer>> connectedVertices = new ArrayList<>();
 
     public CycleDigraph() {
     }
@@ -67,22 +65,21 @@ public class CycleDigraph extends Digraph {
     public Digraph addEdge(int v, int w) {
         Edge edge = new Edge(v, w);
         edges.add(edge);
-        addEdgeToEdgesOfVertex(v, edge);
-        LinkedBag<Integer> vVertices = connectedVertices.get(v);
-        if(vVertices == null)
-            vVertices = new LinkedBag<Integer>();
-        vVertices.add(w);
 
         return super.addEdge(v, w);
     }
 
-    private void addEdgeToEdgesOfVertex(int v, Edge edge) {
-        Set<Edge> edges = edgesOfVertex.get(v);
-        if (edges == null) {
-            edges = new HashSet<>();
-            edgesOfVertex.put(v, edges);
+    public void path() {
+        Set<Edge> path = new LinkedHashSet<>();
+
+        int iv = 0;
+        for (int v : adj[iv]) {
+            Edge edge = new Edge(iv, v);
+            if (!path.contains(edge)) {
+                path.add(edge);
+                break;
+            }
         }
-        edges.add(edge);
     }
 
     public Set<Edge> getCycle() {

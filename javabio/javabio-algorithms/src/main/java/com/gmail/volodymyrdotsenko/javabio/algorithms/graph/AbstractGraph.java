@@ -3,6 +3,7 @@ package com.gmail.volodymyrdotsenko.javabio.algorithms.graph;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedBag;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Created by Volodymyr Dotsenko on 18.07.16.
@@ -12,6 +13,24 @@ public abstract class AbstractGraph implements IGraph {
     protected int V;                      //number of vertices
     protected int E;                      //number of edges
     protected LinkedBag<Integer>[] adj;   //adjacency lists
+
+    protected class VertexIterator {
+        private final int firstVertex;
+        private Iterator<Integer> depthIterator;
+
+        public VertexIterator() {
+            this(0);
+        }
+
+        public VertexIterator(int firstVertex) {
+            this.firstVertex = firstVertex;
+            depthIterator = adj[firstVertex].iterator();
+        }
+
+        public boolean hasDepthNextVertex(){
+
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
