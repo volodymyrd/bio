@@ -73,11 +73,16 @@ public class CycleDigraph extends Digraph {
     }
 
     private boolean checkPathContainsAllEdges(Set<Edge> path) {
-        edges.forEach(e -> {
+        if (edges.size() > path.size())
+            return false;
 
-        });
+        if (path.size() > edges.size())
+            throw new IllegalStateException("Path is wrong");
 
-        return true;
+        if (edges.stream().filter(e -> !path.contains(e)).findFirst().isPresent())
+            return false;
+        else
+            return true;
     }
 
     public Set<Edge> path() {
@@ -88,6 +93,7 @@ public class CycleDigraph extends Digraph {
         while (breadthIterator.hasNext()) {
             int startPoint = breadthIterator.next();
             int v = startPoint;
+            int nextStartPoint = -1;
 
             NEXT:
             for (; ; ) {

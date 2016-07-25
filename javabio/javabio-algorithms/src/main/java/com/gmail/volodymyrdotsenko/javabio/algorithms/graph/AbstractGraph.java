@@ -17,6 +17,7 @@ public abstract class AbstractGraph implements IGraph {
     protected class DepthIterator implements Iterator<Integer> {
         private final int firstVertex;
         private final Iterator<Integer> iterator;
+        private final int lastValue;
 
         public DepthIterator() {
             this(0);
@@ -25,6 +26,7 @@ public abstract class AbstractGraph implements IGraph {
         public DepthIterator(int firstVertex) {
             this.firstVertex = firstVertex;
             iterator = adj[firstVertex].iterator();
+            lastValue = -1;
         }
 
         @Override
