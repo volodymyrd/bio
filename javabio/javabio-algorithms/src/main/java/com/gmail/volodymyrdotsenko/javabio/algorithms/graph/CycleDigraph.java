@@ -45,11 +45,14 @@ public class CycleDigraph extends Digraph {
             result = 31 * result + w;
             return result;
         }
-    }
 
-    public class Vertex {
-        //private final int v;
-
+        @Override
+        public String toString() {
+            return "Edge{" +
+                    "v=" + v +
+                    ", w=" + w +
+                    '}';
+        }
     }
 
     private final Set<Edge> edges = new HashSet<>();
@@ -69,17 +72,49 @@ public class CycleDigraph extends Digraph {
         return super.addEdge(v, w);
     }
 
-    public void path() {
+    private boolean checkPathContainsAllEdges(Set<Edge> path) {
+        edges.forEach(e -> {
+
+        });
+
+        return true;
+    }
+
+    public Set<Edge> path() {
         Set<Edge> path = new LinkedHashSet<>();
 
-        int iv = 0;
-        for (int v : adj[iv]) {
-            Edge edge = new Edge(iv, v);
-            if (!path.contains(edge)) {
-                path.add(edge);
-                break;
+        BreadthIterator breadthIterator = new BreadthIterator();
+        EXIT:
+        while (breadthIterator.hasNext()) {
+            int startPoint = breadthIterator.next();
+            int v = startPoint;
+
+            NEXT:
+            for (; ; ) {
+                DepthIterator depthIterator = new DepthIterator(v);
+                int temp = v;
+                while (depthIterator.hasNext()) {
+                    Integer w = depthIterator.next();
+                    if (w == null)
+                        break NEXT;
+
+                    Edge edge = new Edge(v, w);
+                    if (!path.contains(edge)) {
+                        path.add(edge);
+                        v = w;
+                        break;
+                    }
+                }
+
+                if (v == startPoint) {
+                    break EXIT;
+                }
+                if (temp == v)
+                    break EXIT;
             }
         }
+
+        return path;
     }
 
     public Set<Edge> getCycle() {

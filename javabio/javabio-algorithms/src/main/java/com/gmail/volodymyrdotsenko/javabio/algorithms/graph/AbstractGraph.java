@@ -14,21 +14,50 @@ public abstract class AbstractGraph implements IGraph {
     protected int E;                      //number of edges
     protected LinkedBag<Integer>[] adj;   //adjacency lists
 
-    protected class VertexIterator {
+    protected class DepthIterator implements Iterator<Integer> {
         private final int firstVertex;
-        private Iterator<Integer> depthIterator;
+        private final Iterator<Integer> iterator;
 
-        public VertexIterator() {
+        public DepthIterator() {
             this(0);
         }
 
-        public VertexIterator(int firstVertex) {
+        public DepthIterator(int firstVertex) {
             this.firstVertex = firstVertex;
-            depthIterator = adj[firstVertex].iterator();
+            iterator = adj[firstVertex].iterator();
         }
 
-        public boolean hasDepthNextVertex(){
+        @Override
+        public boolean hasNext() {
+            return iterator.hasNext();
+        }
 
+        @Override
+        public Integer next() {
+            return iterator.next();
+        }
+    }
+
+    protected class BreadthIterator implements Iterator<Integer> {
+
+        private int index;
+
+        public BreadthIterator() {
+            this(0);
+        }
+
+        public BreadthIterator(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index < adj.length;
+        }
+
+        @Override
+        public Integer next() {
+            return index++;
         }
     }
 
