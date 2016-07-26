@@ -89,15 +89,25 @@ public class CycleDigraph extends Digraph {
         Set<Edge> path = new LinkedHashSet<>();
 
         BreadthIterator breadthIterator = new BreadthIterator();
+        int nextStartPoint = -1;
+
         EXIT:
         while (breadthIterator.hasNext()) {
-            int startPoint = breadthIterator.next();
+            int startPoint = -1;
+
+            if (nextStartPoint == -1)
+                startPoint = breadthIterator.next();
+            else
+                startPoint = nextStartPoint;
+
+            if(startPoint == -1)
+                break;
+
             int v = startPoint;
-            int nextStartPoint = -1;
 
             NEXT:
             for (; ; ) {
-                DepthIterator depthIterator = new DepthIterator(v);
+                DepthIterator depthIterator = new DepthIterator(v, startPoint, true);
                 int temp = v;
                 while (depthIterator.hasNext()) {
                     Integer w = depthIterator.next();
@@ -113,7 +123,12 @@ public class CycleDigraph extends Digraph {
                 }
 
                 if (v == startPoint) {
-                    break EXIT;
+                    if(checkPathContainsAllEdges(path))
+                        break EXIT;
+
+                    path.clear();
+
+                    break NEXT;
                 }
                 if (temp == v)
                     break EXIT;

@@ -1,6 +1,7 @@
 package com.gmail.volodymyrdotsenko.javabio.algorithms.graph;
 
 import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedBag;
+import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedStack;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -17,26 +18,57 @@ public abstract class AbstractGraph implements IGraph {
     protected class DepthIterator implements Iterator<Integer> {
         private final int firstVertex;
         private final Iterator<Integer> iterator;
-        private final int lastValue;
+        private final int returnLastIfExist;
+        private final boolean returnLastIfExistFlag;
+        private LinkedStack<Integer> store;
 
         public DepthIterator() {
             this(0);
         }
 
         public DepthIterator(int firstVertex) {
+            this(firstVertex, -1, false);
+        }
+
+        public DepthIterator(int firstVertex, int returnLast, boolean returnLastFlag) {
             this.firstVertex = firstVertex;
             iterator = adj[firstVertex].iterator();
-            lastValue = -1;
+            returnLastIfExist = returnLast;
+            returnLastIfExistFlag = returnLastFlag;
+            if (returnLastIfExistFlag)
+                store = new LinkedStack();
         }
 
         @Override
         public boolean hasNext() {
-            return iterator.hasNext();
+            boolean exist = iterator.hasNext();
+
+            if (store != null && !exist && store.size() > 0) {
+                return true;
+            } else
+                return exist;
         }
 
         @Override
         public Integer next() {
-            return iterator.next();
+            if (returnLastIfExistFlag)
+                return getNext();
+            else
+                return iterator.next();
+        }
+
+        private Integer getNext() {
+            if (iterator.hasNext()) {
+                Integer it = iterator.next();
+                if (it == returnLastIfExist) {
+                    store.push(it);
+                    return getNext();
+                } else
+                    return it;
+            } else if (store.size() > 0) {
+                return store.pop();
+            }else
+                return null;
         }
     }
 
