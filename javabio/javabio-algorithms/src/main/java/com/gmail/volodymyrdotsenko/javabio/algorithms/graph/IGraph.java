@@ -35,5 +35,14 @@ public interface IGraph {
      * @return the vertices adjacent to vertex <tt>v</tt>, as an iterable
      * @throws IndexOutOfBoundsException unless 0 <= v < V
      */
-    public Iterable<Integer> adj(int v);
+    Iterable<Integer> adj(int v);
+
+    /**
+     * Returns the degree of vertex <tt>v</tt>.
+     *
+     * @param v the vertex
+     * @return the degree of vertex <tt>v</tt>
+     * @throws IndexOutOfBoundsException unless 0 <= v < V
+     */
+    int degree(int v);
 }

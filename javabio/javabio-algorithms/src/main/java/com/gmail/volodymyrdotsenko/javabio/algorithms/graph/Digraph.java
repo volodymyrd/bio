@@ -150,6 +150,11 @@ public class Digraph extends AbstractGraph {
         return adj[v].size();
     }
 
+    @Override
+    public int degree(int v) {
+        return outdegree(v) + indegree(v);
+    }
+
     /**
      * Returns the number of directed edges incident to vertex <tt>v</tt>.
      * This is known as the <em>indegree</em> of vertex <tt>v</tt>.

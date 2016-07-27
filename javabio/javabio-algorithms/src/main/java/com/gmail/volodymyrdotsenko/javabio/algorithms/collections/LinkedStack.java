@@ -151,4 +151,17 @@ public class LinkedStack<Item> implements Iterable<Item> {
 
         return true;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("{");
+        Iterator iterator = iterator();
+        while (iterator.hasNext()) {
+            stringBuilder.append(iterator.next());
+            stringBuilder.append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        stringBuilder.append("}");
+        return stringBuilder.toString();
+    }
 }

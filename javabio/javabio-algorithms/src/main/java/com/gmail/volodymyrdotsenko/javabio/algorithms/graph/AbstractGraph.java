@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 /**
+ * Abstract graph
+ * <p>
  * Created by Volodymyr Dotsenko on 18.07.16.
  */
 public abstract class AbstractGraph implements IGraph {
@@ -67,7 +69,7 @@ public abstract class AbstractGraph implements IGraph {
                     return it;
             } else if (store.size() > 0) {
                 return store.pop();
-            }else
+            } else
                 return null;
         }
     }
@@ -93,6 +95,18 @@ public abstract class AbstractGraph implements IGraph {
         public Integer next() {
             return index++;
         }
+    }
+
+    /**
+     * Returns the degree of vertex <tt>v</tt>.
+     *
+     * @param v the vertex
+     * @return the degree of vertex <tt>v</tt>
+     * @throws IndexOutOfBoundsException unless 0 <= v < V
+     */
+    @Override
+    public int degree(int v) {
+        return adj[v].size();
     }
 
     @Override

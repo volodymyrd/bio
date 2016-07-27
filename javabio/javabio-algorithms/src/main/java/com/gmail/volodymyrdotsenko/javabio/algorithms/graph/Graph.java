@@ -109,18 +109,6 @@ public class Graph extends AbstractGraph {
         return adj[v];
     }
 
-    /**
-     * Returns the degree of vertex <tt>v</tt>.
-     *
-     * @param v the vertex
-     * @return the degree of vertex <tt>v</tt>
-     * @throws IndexOutOfBoundsException unless 0 <= v < V
-     */
-    public int degree(int v) {
-        validateVertex(v);
-        return adj[v].size();
-    }
-
     private static final String NEWLINE = System.getProperty("line.separator");
 
     /**
