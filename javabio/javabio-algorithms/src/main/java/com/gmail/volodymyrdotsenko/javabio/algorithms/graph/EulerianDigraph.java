@@ -5,7 +5,8 @@ import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedStack;
 import java.util.*;
 
 /**
- * Cycle oriented graph
+ *  Eulerian oriented graph
+ *
  * <p>
  * Created by Volodymyr Dotsenko on 22.07.16.
  */
