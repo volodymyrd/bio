@@ -4,6 +4,7 @@ import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedBag;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedStack;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * The <tt>Digraph</tt> class represents a directed graph of vertices
@@ -71,6 +72,16 @@ public class Digraph extends AbstractGraph {
                 adj[v].add(w);
             }
         }
+    }
+
+    /**
+     * Initializes a digraph from an adjacency list.
+     *
+     * @param adjacencyList - The adjacency list as a list of string such vertex id -> vertex id,vertex id,...
+     */
+    public Digraph(List<String> adjacencyList) {
+        this();
+        buildFromAdjacencyList(adjacencyList);
     }
 
     /**

@@ -3,8 +3,7 @@ package com.gmail.volodymyrdotsenko.javabio.algorithms.graph;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedBag;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedStack;
 
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Abstract graph
@@ -13,9 +12,74 @@ import java.util.Iterator;
  */
 public abstract class AbstractGraph implements IGraph {
 
+    public static class Edge {
+        private final int v;
+        private final int w;
+
+        public Edge(int v, int w) {
+            this.v = v;
+            this.w = w;
+        }
+
+        public int getV() {
+            return v;
+        }
+
+        public int getW() {
+            return w;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Edge edge = (Edge) o;
+
+            if (v != edge.v) return false;
+            return w == edge.w;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = v;
+            result = 31 * result + w;
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Edge{" +
+                    "v=" + v +
+                    ", w=" + w +
+                    '}';
+        }
+    }
+
     protected int V;                      //number of vertices
     protected int E;                      //number of edges
     protected LinkedBag<Integer>[] adj;   //adjacency lists
+
+    protected final Set<Edge> edges = new HashSet<>();
+
+    public AbstractGraph() {
+    }
+
+    /**
+     * @param adjacencyList - The adjacency list as a list of string such vertex id -> vertex id,vertex id,...
+     */
+    protected void buildFromAdjacencyList(List<String> adjacencyList) {
+        adjacencyList.forEach(e -> {
+            String[] input = e.split("\\W*->\\W*");
+            int v = Integer.valueOf(input[0]);
+            String[] wstr = input[1].split("\\W*,\\W*");
+            for (int i = 0; i < wstr.length; i++) {
+                int w = Integer.valueOf(wstr[i]);
+                addEdge(v, w);
+            }
+        });
+    }
 
     protected class DepthIterator implements Iterator<Integer> {
         private final int firstVertex;

@@ -1,5 +1,6 @@
 package com.gmail.volodymyrdotsenko.javabio.cli.commands;
 
+import com.gmail.volodymyrdotsenko.javabio.algorithms.graph.EulerianDigraph;
 import com.gmail.volodymyrdotsenko.javabio.cli.utils.FileUtils;
 import com.gmail.volodymyrdotsenko.javabio.simple.BioJavaUtil;
 import com.gmail.volodymyrdotsenko.javabio.simple.SequencesUtil;
@@ -199,6 +200,35 @@ public class SequencesCommander extends BaseCommander {
 
             saveTextFile(outputFileName, SequencesUtil.buildBruijnGraph(list.toArray(new String[list.size()]))
                     .toString(false, true));
+
+            return "File " + outputFileName + " created!";
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+        }
+
+        return "Error creating a file";
+    }
+
+    @CliCommand(value = {"findEulerianCycle"}, help = "Solve the Eulerian Cycle Problem")
+    public String findEulerianCycle(
+            @CliOption(key = {"adjacencyListFileName"}, mandatory = true, help = "File contains the adjacency list of an Eulerian directed graph")
+                    String adjacencyListFileName,
+            @CliOption(key = {"outputFileName"}, mandatory = true, help = "An Eulerian cycle in this graph")
+                    String outputFileName,
+            @CliOption(key = {"startPoint"}, help = "Index of start point", mandatory = false) Integer startPoint) {
+
+        try {
+            List<String> list = FileUtils.getListFromFile(adjacencyListFileName);
+
+            EulerianDigraph eulerianDigraph = new EulerianDigraph(list);
+
+            StringBuilder output = new StringBuilder("");
+            for (Integer v : eulerianDigraph.findCycle(startPoint)) {
+                output.append(v);
+                output.append("->");
+            }
+            output.delete(output.length() - 2, output.length() );
+            saveTextFile(outputFileName, output.toString());
 
             return "File " + outputFileName + " created!";
         } catch (IOException e) {

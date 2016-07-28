@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -11,6 +12,33 @@ import java.util.stream.Stream;
  * Created by Volodymyr Dotsenko on 25.07.16.
  */
 public class EulerianDigraphTest {
+
+    @Test
+    public void cycleFromAdjacencyListTest() {
+        List<String> adjacencyList = Stream.of("0   -> 3", "1 ->0", "2 -> 1, 6", "3 -> 2", "4 -> 2", "5 -> 4",
+                "6 -> 5,8", "7 -> 9", "8 ->    7", "9 -> 6").collect(Collectors.toList());
+        EulerianDigraph eulerianDigraph = new EulerianDigraph(adjacencyList);
+        assertEquals("{6,8,7,9,6,5,4,2,1,0,3,2,6}", eulerianDigraph.findCycle(6).toString());
+    }
+
+    @Test
+    public void cycleTest() {
+        EulerianDigraph eulerianDigraph = new EulerianDigraph();
+        eulerianDigraph.addEdge(0, 3);
+        eulerianDigraph.addEdge(1, 0);
+        eulerianDigraph.addEdge(2, 1);
+        eulerianDigraph.addEdge(2, 6);
+        eulerianDigraph.addEdge(3, 2);
+        eulerianDigraph.addEdge(4, 2);
+        eulerianDigraph.addEdge(5, 4);
+        eulerianDigraph.addEdge(6, 5);
+        eulerianDigraph.addEdge(6, 8);
+        eulerianDigraph.addEdge(7, 9);
+        eulerianDigraph.addEdge(8, 7);
+        eulerianDigraph.addEdge(9, 6);
+
+        assertEquals("{6,8,7,9,6,5,4,2,1,0,3,2,6}", eulerianDigraph.findCycle(6).toString());
+    }
 
     @Test
     public void pathTest() {
