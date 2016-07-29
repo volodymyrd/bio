@@ -10,7 +10,7 @@ import java.util.*;
  * <p>
  * Created by Volodymyr Dotsenko on 22.07.16.
  */
-public class EulerianDigraph extends Digraph {
+public class EulerianDigraph extends SymbolDigraph {
 
     private Map<Integer, Set<Edge>> deletedEdges;
 
@@ -21,32 +21,64 @@ public class EulerianDigraph extends Digraph {
         super(V);
     }
 
-    /**
-     * Initializes a digraph from an adjacency list.
-     *
-     * @param adjacencyList - The adjacency list as a list of string such vertex id -> vertex id,vertex id,...
-     */
-    public EulerianDigraph(List<String> adjacencyList) {
-        super(adjacencyList);
-    }
-
     @Override
-    public Digraph addEdge(int v, int w) {
+    public EulerianDigraph addEdge(int v, int w) {
         Edge edge = new Edge(v, w);
         edges.add(edge);
 
-        return super.addEdge(v, w);
+        EulerianDigraph digraph = (EulerianDigraph) super.addEdge(v, w);
+
+        int indegree = indegree(v);
+        int outdegree = outdegree(v);
+
+        if (indegree != outdegree)
+            unbalancedVertices.add(new UnbalancedVertex(v, indegree, outdegree));
+        else
+            unbalancedVertices.remove(new UnbalancedVertex(v, indegree, outdegree));
+
+        indegree = indegree(w);
+        outdegree = outdegree(w);
+
+        if (indegree != outdegree)
+            unbalancedVertices.add(new UnbalancedVertex(w, indegree, outdegree));
+        else
+            unbalancedVertices.remove(new UnbalancedVertex(w, indegree, outdegree));
+
+        return digraph;
     }
 
-    public boolean isEulerian() {
+    /**
+     * Adds the directed edge v->w to this digraph.
+     *
+     * @param v the tail vertex
+     * @param w the head vertex
+     * @throws IndexOutOfBoundsException unless both 0 <= v < V and 0 <= w < V
+     */
+    public EulerianDigraph addEdge(String v, String w) {
+        Edge edge = addSymbolEdge(v, w);
+
+        return this.addEdge(edge.getV(), edge.getW());
+    }
+
+    public List<UnbalancedVertex> findListUnbalancedVertex() {
+        List<UnbalancedVertex> list = new ArrayList<>();
+
         BreadthIterator breadthIterator = new BreadthIterator();
         while (breadthIterator.hasNext()) {
             int v = breadthIterator.next();
-            if (indegree(v) != outdegree(v))
-                return false;
+            if (indegree(v) != outdegree(v)) {
+                list.add(new UnbalancedVertex(v, indegree(v), outdegree(v)));
+            }
         }
 
-        return true;
+        return list;
+    }
+
+    public boolean isCycle() {
+        if (unbalancedVertices.size() == 0)
+            return true;
+        else
+            return false;
     }
 
     public Set<Edge> findCycleAsEdge() {
@@ -68,14 +100,58 @@ public class EulerianDigraph extends Digraph {
         return path;
     }
 
-    public LinkedStack<Integer> findCycle(Integer startPoint) {
-        if (!isEulerian()) {
+    private Integer fictiveVertex;
+
+    public Deque<Integer> findPath() {
+        fictiveVertex = null;
+        Integer startPoint = null;
+        if (unbalancedVertices.size() == 2) {
+            Iterator<UnbalancedVertex> iterator = unbalancedVertices.iterator();
+            UnbalancedVertex uv = iterator.next();
+            UnbalancedVertex uw = iterator.next();
+
+            int uvDiff = uv.indegree - uv.outdegree;
+            int uwDiff = uw.indegree - uw.outdegree;
+            if (uvDiff + uwDiff == 0) {
+                if (uvDiff > 0) {
+                    addEdge(uv.v, uw.v);
+                    startPoint = uw.v;
+                } else {
+                    addEdge(uw.v, uv.v);
+                    startPoint = uv.v;
+                }
+
+                fictiveVertex = startPoint;
+
+                if (unbalancedVertices.size() != 0)
+                    throw new IllegalStateException("Graph is not Eulerian, exist unbalanced vertices: " + getUnbalancedVertices());
+            } else
+                throw new IllegalStateException("Graph is not Eulerian, exist unbalanced vertices: " + getUnbalancedVertices());
+
+        } else if (unbalancedVertices.size() != 0) {
+            throw new IllegalStateException("Graph is not Eulerian, exist unbalanced vertices: " + getUnbalancedVertices());
+        }
+
+
+        return findCycle(startPoint);
+    }
+
+    private String getUnbalancedVertices() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        unbalancedVertices.forEach(e -> stringBuilder.append(e + " "));
+
+        return stringBuilder.toString();
+    }
+
+    public Deque<Integer> findCycle(Integer startPoint) {
+        if (unbalancedVertices.size() > 0) {
             throw new IllegalStateException("Graph is not Eulerian");
         }
 
         deletedEdges = new HashMap<>();
 
-        LinkedStack<Integer> vertices = new LinkedStack<>();
+        Deque<Integer> vertices = new LinkedList<>();
 
         LinkedStack<Integer> stack = new LinkedStack<>();
         BreadthIterator breadthIterator = new BreadthIterator();
@@ -113,6 +189,9 @@ public class EulerianDigraph extends Digraph {
 
         deletedEdges.clear();
         deletedEdges = null;
+
+        if (fictiveVertex != null && vertices.peek().equals(fictiveVertex))
+            vertices.removeLast();
 
         return vertices;
     }

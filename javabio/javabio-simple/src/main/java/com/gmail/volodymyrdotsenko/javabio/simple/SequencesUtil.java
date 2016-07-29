@@ -1,5 +1,6 @@
 package com.gmail.volodymyrdotsenko.javabio.simple;
 
+import com.gmail.volodymyrdotsenko.javabio.algorithms.graph.EulerianDigraph;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.graph.SymbolDigraph;
 
 import java.util.Deque;
@@ -72,6 +73,20 @@ public class SequencesUtil {
             digraph.addEdge(prefix(texts[i]), suffix(texts[i]));
 
         return digraph;
+    }
+
+    public static EulerianDigraph buildEulerianDigraph(String[] texts) {
+        EulerianDigraph digraph = new EulerianDigraph();
+
+        for (int i = 0; i < texts.length; i++)
+            digraph.addEdge(prefix(texts[i]), suffix(texts[i]));
+
+        return digraph;
+    }
+
+    public static String stringReconstruction(String[] texts){
+        EulerianDigraph digraph = buildEulerianDigraph(texts);
+        return digraph.toSymbols(digraph.findPath()).toString();
     }
 
     public static String findHamiltonianPathInBruijnGraph(int k) {

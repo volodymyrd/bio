@@ -75,16 +75,6 @@ public class Digraph extends AbstractGraph {
     }
 
     /**
-     * Initializes a digraph from an adjacency list.
-     *
-     * @param adjacencyList - The adjacency list as a list of string such vertex id -> vertex id,vertex id,...
-     */
-    public Digraph(List<String> adjacencyList) {
-        this();
-        buildFromAdjacencyList(adjacencyList);
-    }
-
-    /**
      * Returns the number of vertices in this digraph.
      *
      * @return the number of vertices in this digraph
@@ -125,8 +115,8 @@ public class Digraph extends AbstractGraph {
 
         adj[v].add(w);
 
-        if (w >= indegree.length) {
-            indegree = Arrays.copyOf(indegree, w + 1);
+        if (max >= indegree.length) {
+            indegree = Arrays.copyOf(indegree, max + 1);
         }
 
         indegree[w]++;

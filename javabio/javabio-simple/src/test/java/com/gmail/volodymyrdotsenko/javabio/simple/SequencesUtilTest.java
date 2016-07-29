@@ -105,4 +105,10 @@ public class SequencesUtilTest {
     public void findHamiltonianPathInBruijnGraph3() throws Exception {
         assertEquals("0000100110101111000", SequencesUtil.findHamiltonianPathInBruijnGraph(4));
     }
+
+    @Test
+    public void stringReconstruction() {
+        assertEquals("0000100110101111000",
+                SequencesUtil.stringReconstruction(new String[]{"CTTA", "ACCA", "TACC", "GGCT", "GCTT", "TTAC"}));
+    }
 }

@@ -17,8 +17,9 @@ public class EulerianDigraphTest {
     public void cycleFromAdjacencyListTest() {
         List<String> adjacencyList = Stream.of("0   -> 3", "1 ->0", "2 -> 1, 6", "3 -> 2", "4 -> 2", "5 -> 4",
                 "6 -> 5,8", "7 -> 9", "8 ->    7", "9 -> 6").collect(Collectors.toList());
-        EulerianDigraph eulerianDigraph = new EulerianDigraph(adjacencyList);
-        assertEquals("{6,8,7,9,6,5,4,2,1,0,3,2,6}", eulerianDigraph.findCycle(6).toString());
+        EulerianDigraph eulerianDigraph = new EulerianDigraph();
+        eulerianDigraph.buildFromAdjacencyList(adjacencyList);
+        assertEquals("[6, 8, 7, 9, 6, 5, 4, 2, 1, 0, 3, 2, 6]", eulerianDigraph.findCycle(6).toString());
     }
 
     @Test
@@ -37,7 +38,7 @@ public class EulerianDigraphTest {
         eulerianDigraph.addEdge(8, 7);
         eulerianDigraph.addEdge(9, 6);
 
-        assertEquals("{6,8,7,9,6,5,4,2,1,0,3,2,6}", eulerianDigraph.findCycle(6).toString());
+        assertEquals("[6, 8, 7, 9, 6, 5, 4, 2, 1, 0, 3, 2, 6]", eulerianDigraph.findCycle(6).toString());
     }
 
     @Test

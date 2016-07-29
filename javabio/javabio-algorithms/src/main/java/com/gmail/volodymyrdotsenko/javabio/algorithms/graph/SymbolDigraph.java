@@ -3,14 +3,15 @@ package com.gmail.volodymyrdotsenko.javabio.algorithms.graph;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedBag;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Volodymyr Dotsenko on 7/16/16.
  */
 public class SymbolDigraph extends Digraph {
 
-    private final Map<String, Integer> st = new HashMap<>();    // string -> index
-    private String[] keys;                                      // index  -> string
+    protected final Map<String, Integer> st = new HashMap<>();    // string -> index
+    protected String[] keys;                                      // index  -> string
 
     public SymbolDigraph() {
         keys = new String[0];
@@ -53,6 +54,14 @@ public class SymbolDigraph extends Digraph {
      */
     public SymbolDigraph addEdge(String v, String w) {
 
+        Edge edge = addSymbolEdge(v, w);
+
+        super.addEdge(edge.getV(), edge.getW());
+
+        return this;
+    }
+
+    protected Edge addSymbolEdge(String v, String w) {
         Integer iv = st.get(v);
         if (iv == null) {
             iv = st.size();
@@ -74,9 +83,7 @@ public class SymbolDigraph extends Digraph {
         keys[iv] = v;
         keys[iw] = w;
 
-        super.addEdge(iv, iw);
-
-        return this;
+        return new Edge(iv, iw);
     }
 
     public Iterable<String> adj(String v) {
@@ -97,6 +104,12 @@ public class SymbolDigraph extends Digraph {
 
     public String[] getKeys() {
         return keys;
+    }
+
+    public List<String> toSymbols(Collection<Integer> vertices) {
+        return vertices.stream().map(e -> {
+            return keys[e];
+        }).collect(Collectors.toList());
     }
 
     public String toString(boolean printEmptyVertices, boolean sortedVertices) {

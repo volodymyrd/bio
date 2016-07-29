@@ -12,6 +12,43 @@ import java.util.*;
  */
 public abstract class AbstractGraph implements IGraph {
 
+    public class UnbalancedVertex {
+        public final int v;
+        public final int indegree;
+        public final int outdegree;
+
+        public UnbalancedVertex(int v, int indegree, int outdegree) {
+            this.v = v;
+            this.indegree = indegree;
+            this.outdegree = outdegree;
+        }
+
+        @Override
+        public String toString() {
+            return "UnbalancedVertex{" +
+                    "v=" + v +
+                    ", indegree=" + indegree +
+                    ", outdegree=" + outdegree +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            UnbalancedVertex that = (UnbalancedVertex) o;
+
+            return v == that.v;
+
+        }
+
+        @Override
+        public int hashCode() {
+            return v;
+        }
+    }
+
     public static class Edge {
         private final int v;
         private final int w;
@@ -62,6 +99,7 @@ public abstract class AbstractGraph implements IGraph {
     protected LinkedBag<Integer>[] adj;   //adjacency lists
 
     protected final Set<Edge> edges = new HashSet<>();
+    protected Set<UnbalancedVertex> unbalancedVertices = new HashSet<>();
 
     public AbstractGraph() {
     }
@@ -69,7 +107,7 @@ public abstract class AbstractGraph implements IGraph {
     /**
      * @param adjacencyList - The adjacency list as a list of string such vertex id -> vertex id,vertex id,...
      */
-    protected void buildFromAdjacencyList(List<String> adjacencyList) {
+    public void buildFromAdjacencyList(List<String> adjacencyList) {
         adjacencyList.forEach(e -> {
             String[] input = e.split("\\W*->\\W*");
             int v = Integer.valueOf(input[0]);

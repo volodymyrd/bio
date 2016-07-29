@@ -220,14 +220,15 @@ public class SequencesCommander extends BaseCommander {
         try {
             List<String> list = FileUtils.getListFromFile(adjacencyListFileName);
 
-            EulerianDigraph eulerianDigraph = new EulerianDigraph(list);
+            EulerianDigraph eulerianDigraph = new EulerianDigraph();
+            eulerianDigraph.buildFromAdjacencyList(list);
 
             StringBuilder output = new StringBuilder("");
-            for (Integer v : eulerianDigraph.findCycle(startPoint)) {
+            for (Integer v : startPoint == null ? eulerianDigraph.findPath() : eulerianDigraph.findCycle(startPoint)) {
                 output.append(v);
                 output.append("->");
             }
-            output.delete(output.length() - 2, output.length() );
+            output.delete(output.length() - 2, output.length());
             saveTextFile(outputFileName, output.toString());
 
             return "File " + outputFileName + " created!";

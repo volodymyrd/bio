@@ -352,6 +352,7 @@ public class SubStringUtilsTest {
                         .collect(Collectors.toList()), 6, 1000, 1).toString());
     }
 
+    @Ignore
     @Test
     public void testRandomizedMotifSearchCheckEnding() {
         Map<MotifsHolder, Integer> theBestMotifsMap = new HashMap<>();
