@@ -5,6 +5,7 @@ import com.gmail.volodymyrdotsenko.javabio.algorithms.graph.SymbolDigraph;
 
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -86,7 +87,8 @@ public class SequencesUtil {
 
     public static String stringReconstruction(String[] texts){
         EulerianDigraph digraph = buildEulerianDigraph(texts);
-        return digraph.toSymbols(digraph.findPath()).toString();
+        List<String> parts = digraph.toSymbols(digraph.findPath());
+        return stringSpelledGenomePathProblem(parts.toArray(new String[parts.size()]));
     }
 
     public static String findHamiltonianPathInBruijnGraph(int k) {

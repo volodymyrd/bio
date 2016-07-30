@@ -108,7 +108,7 @@ public class SequencesUtilTest {
 
     @Test
     public void stringReconstruction() {
-        assertEquals("0000100110101111000",
+        assertEquals("GGCTTACCA",
                 SequencesUtil.stringReconstruction(new String[]{"CTTA", "ACCA", "TACC", "GGCT", "GCTT", "TTAC"}));
     }
 }

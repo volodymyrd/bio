@@ -238,4 +238,19 @@ public class SequencesCommander extends BaseCommander {
 
         return "Error creating a file";
     }
+
+    @CliCommand(value = {"stringReconstruction"}, help = "Solve the String Reconstruction Problem")
+    public String stringReconstruction(
+            @CliOption(key = {"kmersFileName"}, mandatory = true, help = "File contains list of k-mers Patterns")
+                    String kmersFileName) {
+        try {
+            List<String> list = FileUtils.getListFromFile(kmersFileName);
+
+            return SequencesUtil.stringReconstruction(list.toArray(new String[list.size()]));
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+
+            return "";
+        }
+    }
 }
