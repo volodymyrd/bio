@@ -33,14 +33,14 @@ public class SymbolDigraph extends Digraph {
     public SymbolDigraph addEdge(int v, int w) {
         super.addEdge(v, w);
 
-        if (keys.length < V())
-            keys = Arrays.copyOf(keys, V());
+//        if (keys.length < V())
+//            keys = Arrays.copyOf(keys, V());
 
-        if (!st.containsKey(v))
-            st.put(String.valueOf(v), st.size());
-
-        if (!st.containsKey(w))
-            st.put(String.valueOf(w), st.size());
+//        if (!st.containsKey(v))
+//            st.put(String.valueOf(v), st.size());
+//
+//        if (!st.containsKey(w))
+//            st.put(String.valueOf(w), st.size());
 
         return this;
     }
@@ -126,9 +126,10 @@ public class SymbolDigraph extends Digraph {
 
                     for (int w : adj(st.get(v))) {
                         s.append(String.format("%s,", keys[w]));
-                        //s.append(",");
                     }
-                    s.deleteCharAt(s.lastIndexOf(","));
+                    int ind = s.lastIndexOf(",");
+                    if (ind >= 0)
+                        s.deleteCharAt(ind);
                     s.append(NEWLINE);
                 }
             }
@@ -141,7 +142,9 @@ public class SymbolDigraph extends Digraph {
                     for (int w : adj(st.get(v))) {
                         s.append(String.format("%s,", keys[w]));
                     }
-                    s.deleteCharAt(s.lastIndexOf(","));
+                    int ind = s.lastIndexOf(",");
+                    if (ind >= 0)
+                        s.deleteCharAt(ind);
                     s.append(NEWLINE);
                 }
             }

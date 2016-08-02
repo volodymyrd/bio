@@ -111,4 +111,10 @@ public class SequencesUtilTest {
         assertEquals("GGCTTACCA",
                 SequencesUtil.stringReconstruction(new String[]{"CTTA", "ACCA", "TACC", "GGCT", "GCTT", "TTAC"}));
     }
+
+    @Test
+    public void stringReconstructionForKUniversal(){
+        assertEquals("0001111011001010",
+                SequencesUtil.stringReconstructionForKUniversal(4));
+    }
 }

@@ -79,16 +79,25 @@ public class SequencesUtil {
     public static EulerianDigraph buildEulerianDigraph(String[] texts) {
         EulerianDigraph digraph = new EulerianDigraph();
 
-        for (int i = 0; i < texts.length; i++)
+        for (int i = 0; i < texts.length; i++) {
             digraph.addEdge(prefix(texts[i]), suffix(texts[i]));
+        }
 
         return digraph;
     }
 
-    public static String stringReconstruction(String[] texts){
+    public static String stringReconstruction(String[] texts) {
         EulerianDigraph digraph = buildEulerianDigraph(texts);
         List<String> parts = digraph.toSymbols(digraph.findPath());
         return stringSpelledGenomePathProblem(parts.toArray(new String[parts.size()]));
+    }
+
+    public static String stringReconstructionForKUniversal(int k) {
+        Set<String> texts = SubStringUtils.permutationsWithRepetitions(k, new char[]{'0', '1'});
+        EulerianDigraph digraph = buildEulerianDigraph(texts.toArray(new String[texts.size()]));
+        List<String> parts = digraph.toSymbols(digraph.findPath());
+        String res = stringSpelledGenomePathProblem(parts.toArray(new String[parts.size()]));
+        return res.substring(0, res.length() - (k - 1));
     }
 
     public static String findHamiltonianPathInBruijnGraph(int k) {
