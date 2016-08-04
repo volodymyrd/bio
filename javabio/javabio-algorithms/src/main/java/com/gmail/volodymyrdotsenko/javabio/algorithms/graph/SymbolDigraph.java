@@ -8,18 +8,18 @@ import java.util.stream.Collectors;
 /**
  * Created by Volodymyr Dotsenko on 7/16/16.
  */
-public class SymbolDigraph extends Digraph {
+public class SymbolDigraph<T> extends Digraph {
 
-    protected final Map<String, Integer> st = new HashMap<>();    // string -> index
-    protected String[] keys;                                      // index  -> string
+    protected final Map<T, Integer> st = new HashMap<>();    // string -> index
+    protected T[] keys;                                      // index  -> string
 
     public SymbolDigraph() {
-        keys = new String[0];
+        keys = (T[]) new Object[0];
     }
 
     public SymbolDigraph(int V) {
         super(V);
-        keys = new String[V];
+        keys = (T[]) new Object[V];
     }
 
     /**
@@ -52,7 +52,7 @@ public class SymbolDigraph extends Digraph {
      * @param w the head vertex
      * @throws IndexOutOfBoundsException unless both 0 <= v < V and 0 <= w < V
      */
-    public SymbolDigraph addEdge(String v, String w) {
+    public SymbolDigraph addEdge(T v, T w) {
 
         Edge edge = addSymbolEdge(v, w);
 
@@ -61,17 +61,17 @@ public class SymbolDigraph extends Digraph {
         return this;
     }
 
-    protected Edge addSymbolEdge(String v, String w) {
+    protected Edge addSymbolEdge(T v, T w) {
         Integer iv = st.get(v);
         if (iv == null) {
             iv = st.size();
-            st.put(String.valueOf(v), iv);
+            st.put(v, iv);
         }
 
         Integer iw = st.get(w);
         if (iw == null) {
             iw = st.size();
-            st.put(String.valueOf(w), iw);
+            st.put(w, iw);
         }
 
         int max = iv > iw ? iv : iw;
@@ -86,10 +86,10 @@ public class SymbolDigraph extends Digraph {
         return new Edge(iv, iw);
     }
 
-    public Iterable<String> adj(String v) {
+    public Iterable<T> adj(String v) {
         Iterable<Integer> it = super.adj(st.get(v));
 
-        LinkedBag<String> bag = new LinkedBag<>();
+        LinkedBag<T> bag = new LinkedBag<>();
 
         for (Integer i : it) {
             bag.add(keys[i]);
@@ -98,15 +98,15 @@ public class SymbolDigraph extends Digraph {
         return bag;
     }
 
-    public Map<String, Integer> getSt() {
+    public Map<T, Integer> getSt() {
         return st;
     }
 
-    public String[] getKeys() {
-        return keys;
+    public List<T> getKeys() {
+        return Arrays.asList(keys);
     }
 
-    public List<String> toSymbols(Collection<Integer> vertices) {
+    public List<T> toSymbols(Collection<Integer> vertices) {
         return vertices.stream().map(e -> {
             return keys[e];
         }).collect(Collectors.toList());
@@ -117,9 +117,9 @@ public class SymbolDigraph extends Digraph {
         s.append(V() + " vertices, " + E() + " edges " + NEWLINE);
 
         if (sortedVertices) {
-            Set<String> sorted = new TreeSet<>(st.keySet());
+            Set<T> sorted = new TreeSet<>(st.keySet());
 
-            for (String v : sorted) {
+            for (T v : sorted) {
                 Iterable<Integer> it = adj(st.get(v));
                 if (printEmptyVertices || (!printEmptyVertices && it.iterator().hasNext())) {
                     s.append(String.format("%s -> ", v));
@@ -134,7 +134,7 @@ public class SymbolDigraph extends Digraph {
                 }
             }
         } else
-            for (String v : keys) {
+            for (T v : keys) {
                 Iterable<Integer> it = adj(st.get(v));
                 if (printEmptyVertices || (!printEmptyVertices && it.iterator().hasNext())) {
                     s.append(String.format("%s -> ", v));

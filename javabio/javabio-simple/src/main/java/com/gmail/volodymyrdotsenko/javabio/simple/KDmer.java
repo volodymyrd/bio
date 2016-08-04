@@ -18,6 +18,14 @@ public class KDmer implements Comparable<KDmer> {
         this.pattern2 = pattern2;
     }
 
+    public KDmer getPrefix() {
+        return new KDmer(SequencesUtil.prefix(pattern1), SequencesUtil.prefix(pattern2));
+    }
+
+    public KDmer getSuffix() {
+        return new KDmer(SequencesUtil.suffix(pattern1), SequencesUtil.suffix(pattern2));
+    }
+
     @Override
     public int compareTo(KDmer o) {
         if (pattern1.equals(o.pattern1))
@@ -29,5 +37,24 @@ public class KDmer implements Comparable<KDmer> {
     @Override
     public String toString() {
         return "(" + pattern1 + "|" + pattern2 + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        KDmer kDmer = (KDmer) o;
+
+        if (!pattern1.equals(kDmer.pattern1)) return false;
+        return pattern2.equals(kDmer.pattern2);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = pattern1.hashCode();
+        result = 31 * result + pattern2.hashCode();
+        return result;
     }
 }

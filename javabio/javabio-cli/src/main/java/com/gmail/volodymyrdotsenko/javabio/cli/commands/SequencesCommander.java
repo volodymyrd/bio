@@ -220,7 +220,7 @@ public class SequencesCommander extends BaseCommander {
         try {
             List<String> list = FileUtils.getListFromFile(adjacencyListFileName);
 
-            EulerianDigraph eulerianDigraph = new EulerianDigraph();
+            EulerianDigraph<String> eulerianDigraph = new EulerianDigraph();
             eulerianDigraph.buildFromAdjacencyList(list);
 
             StringBuilder output = new StringBuilder("");

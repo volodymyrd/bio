@@ -10,7 +10,7 @@ import java.util.*;
  * <p>
  * Created by Volodymyr Dotsenko on 22.07.16.
  */
-public class EulerianDigraph extends SymbolDigraph {
+public class EulerianDigraph<T> extends SymbolDigraph<T> {
 
     private Map<Integer, Set<Edge>> deletedEdges;
 
@@ -54,7 +54,7 @@ public class EulerianDigraph extends SymbolDigraph {
      * @param w the head vertex
      * @throws IndexOutOfBoundsException unless both 0 <= v < V and 0 <= w < V
      */
-    public EulerianDigraph addEdge(String v, String w) {
+    public EulerianDigraph addEdge(T v, T w) {
         Edge edge = addSymbolEdge(v, w);
 
         return this.addEdge(edge.getV(), edge.getW());

@@ -34,8 +34,8 @@ public class SequencesUtil {
         return builder.toString();
     }
 
-    public static SymbolDigraph overlapGraph(String[] texts) {
-        SymbolDigraph digraph = new SymbolDigraph();
+    public static SymbolDigraph<String> overlapGraph(String[] texts) {
+        SymbolDigraph<String> digraph = new SymbolDigraph();
 
         for (int i = 0; i < texts.length; i++)
             for (int j = 0; j < texts.length; j++) {
@@ -51,14 +51,14 @@ public class SequencesUtil {
     }
 
 
-    public static SymbolDigraph buildBruijnGraph(int k) {
+    public static SymbolDigraph<String> buildBruijnGraph(int k) {
         Set<String> set = SubStringUtils.permutationsWithRepetitions(k, new char[]{'0', '1'});
         return overlapGraph(set.toArray(new String[set.size()]));
     }
 
-    public static SymbolDigraph buildBruijnGraph(String text, int k) {
+    public static SymbolDigraph<String> buildBruijnGraph(String text, int k) {
         KmerIterator it = new KmerIterator(text, k);
-        SymbolDigraph digraph = new SymbolDigraph();
+        SymbolDigraph<String> digraph = new SymbolDigraph();
         while (it.hasNext()) {
             String kmer = it.next();
             digraph.addEdge(prefix(kmer), suffix(kmer));
@@ -67,8 +67,8 @@ public class SequencesUtil {
         return digraph;
     }
 
-    public static SymbolDigraph buildBruijnGraph(String[] texts) {
-        SymbolDigraph digraph = new SymbolDigraph();
+    public static SymbolDigraph<String> buildBruijnGraph(String[] texts) {
+        SymbolDigraph<String> digraph = new SymbolDigraph();
 
         for (int i = 0; i < texts.length; i++)
             digraph.addEdge(prefix(texts[i]), suffix(texts[i]));
@@ -94,23 +94,23 @@ public class SequencesUtil {
 
     public static String stringReconstructionForKUniversal(int k) {
         Set<String> texts = SubStringUtils.permutationsWithRepetitions(k, new char[]{'0', '1'});
-        EulerianDigraph digraph = buildEulerianDigraph(texts.toArray(new String[texts.size()]));
+        EulerianDigraph<String> digraph = buildEulerianDigraph(texts.toArray(new String[texts.size()]));
         List<String> parts = digraph.toSymbols(digraph.findPath());
         String res = stringSpelledGenomePathProblem(parts.toArray(new String[parts.size()]));
         return res.substring(0, res.length() - (k - 1));
     }
 
     public static String findHamiltonianPathInBruijnGraph(int k) {
-        SymbolDigraph graph = buildBruijnGraph(k);
+        SymbolDigraph<String> graph = buildBruijnGraph(k);
 
         Deque<String> nodes = new LinkedList<>();
 
-        findPath(graph, graph.getKeys()[0], nodes);
+        findPath(graph, graph.getKeys().get(0), nodes);
 
         return stringSpelledGenomePathProblem(nodes.toArray(new String[nodes.size()]));
     }
 
-    private static boolean findPath(final SymbolDigraph graph, String v, final Deque<String> nodes) {
+    private static boolean findPath(final SymbolDigraph<String> graph, String v, final Deque<String> nodes) {
         if (nodes.contains(v))
             return false;
 
