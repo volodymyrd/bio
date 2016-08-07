@@ -18,6 +18,41 @@ public class SequencesUtilTest {
     }
 
     @Test
+    public void stringSpelledGenomePathProblemForKDmer() throws Exception {
+        assertEquals("TAATGCCATGGGATGTT",
+                SequencesUtil
+                        .stringSpelledGenomePathProblem(
+                                new KDmer[]{
+                                        new KDmer("TAA", "CCA"),
+                                        new KDmer("AAT", "CAT"),
+                                        new KDmer("ATG", "ATG"),
+                                        new KDmer("TGC", "TGG"),
+                                        new KDmer("GCC", "GGG"),
+                                        new KDmer("CCA", "GGA"),
+                                        new KDmer("CAT", "GAT"),
+                                        new KDmer("ATG", "ATG"),
+                                        new KDmer("TGG", "TGT"),
+                                        new KDmer("GGG", "GTT")}, 3, 2));
+    }
+
+    @Test
+    public void stringSpelledGenomePathProblemForKDmer2() throws Exception {
+        assertEquals("AGCAGCTGCTGCA",
+                SequencesUtil
+                        .stringSpelledGenomePathProblem(
+                                new KDmer[]{
+                                        new KDmer("AG", "AG"),
+                                        new KDmer("GC", "GC"),
+                                        new KDmer("CA", "CT"),
+                                        new KDmer("AG", "TG"),
+                                        new KDmer("GC", "GC"),
+                                        new KDmer("CT", "CT"),
+                                        new KDmer("TG", "TG"),
+                                        new KDmer("GC", "GC"),
+                                        new KDmer("CT", "CA")}, 2, 1));
+    }
+
+    @Test
     public void stringSpelledGenomePathProblemForBruijn() throws Exception {
         assertEquals("00110",
                 SequencesUtil
@@ -113,8 +148,14 @@ public class SequencesUtilTest {
     }
 
     @Test
-    public void stringReconstructionForKUniversal(){
+    public void stringReconstructionForKUniversal() {
         assertEquals("0001111011001010",
                 SequencesUtil.stringReconstructionForKUniversal(4));
+    }
+
+    //@Test
+    public void stringReconstructionForKDmer() {
+        assertEquals("GGCTTACCA",
+                SequencesUtil.stringReconstruction(new String[]{"CTTA", "ACCA", "TACC", "GGCT", "GCTT", "TTAC"}));
     }
 }

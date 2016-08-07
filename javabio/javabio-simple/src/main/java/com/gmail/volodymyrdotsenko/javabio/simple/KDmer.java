@@ -18,6 +18,14 @@ public class KDmer implements Comparable<KDmer> {
         this.pattern2 = pattern2;
     }
 
+    public String getPattern1() {
+        return pattern1;
+    }
+
+    public String getPattern2() {
+        return pattern2;
+    }
+
     public KDmer getPrefix() {
         return new KDmer(SequencesUtil.prefix(pattern1), SequencesUtil.prefix(pattern2));
     }

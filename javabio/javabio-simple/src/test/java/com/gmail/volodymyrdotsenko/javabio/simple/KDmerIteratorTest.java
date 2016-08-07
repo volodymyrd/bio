@@ -31,4 +31,10 @@ public class KDmerIteratorTest {
         assertEquals("(AAT|CAT) (ATG|ATG) (ATG|ATG) (CAT|GAT) (CCA|GGA) (GCC|GGG) (GGG|GTT) (TAA|CCA) (TGC|TGG) (TGG|TGT)",
                 iterator.getList(true).stream().map(e -> e.toString()).collect(Collectors.joining(" ")));
     }
+
+    @Test
+    public void shouldPrintSortedKDmer3() {
+        KDmerIterator iterator = new KDmerIterator("TAATGCCATGGGATGTT", 3, 2);
+        System.out.println(iterator.getList(false));
+    }
 }

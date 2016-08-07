@@ -34,6 +34,31 @@ public class SequencesUtil {
         return builder.toString();
     }
 
+    public static String stringSpelledGenomePathProblem(KDmer[] kDmers, int k, int d) {
+        StringBuilder builder = new StringBuilder();
+        StringBuilder builder2 = new StringBuilder();
+
+        for (int i = 0; i < kDmers.length - 1; i++) {
+            if (kDmers[i].getSuffix().equals(kDmers[i + 1].getPrefix())) {
+                if (builder.length() == 0)
+                    builder.append(kDmers[i].getPattern1());
+
+                builder.append(kDmers[i + 1].getPattern1().charAt(kDmers[i + 1].getPattern1().length() - 1));
+
+                int remain = kDmers.length - i - 1;
+                if (remain == d + 1) {
+                    builder2.append(kDmers[i + 1].getPattern2());
+                } else if (remain < d + 1) {
+                    builder2.append(kDmers[i + 1].getPattern2().charAt(kDmers[i + 1].getPattern2().length() - 1));
+                }
+            }
+        }
+
+        //builder2.append(kDmers[kDmers.length - 1].getPattern2().charAt(kDmers[kDmers.length - 1].getPattern2().length() - 1));
+
+        return builder.append(builder2).toString();
+    }
+
     public static SymbolDigraph<String> overlapGraph(String[] texts) {
         SymbolDigraph<String> digraph = new SymbolDigraph();
 
