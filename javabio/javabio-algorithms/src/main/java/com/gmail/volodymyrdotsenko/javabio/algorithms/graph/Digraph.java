@@ -4,7 +4,8 @@ import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedBag;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedStack;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The <tt>Digraph</tt> class represents a directed graph of vertices
@@ -149,6 +150,14 @@ public class Digraph extends AbstractGraph {
      */
     public int outdegree(int v) {
         return adj[v].size();
+    }
+
+    public int outdegreeUnique(int v) {
+        Set<Integer> unique = new HashSet<>();
+        for (Integer i : adj[v])
+            unique.add(i);
+
+        return unique.size();
     }
 
     @Override

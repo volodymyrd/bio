@@ -3,10 +3,7 @@ package com.gmail.volodymyrdotsenko.javabio.simple;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.graph.EulerianDigraph;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.graph.SymbolDigraph;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Volodymyr Dotsenko on 12.07.16.
@@ -101,11 +98,21 @@ public class SequencesUtil {
         return digraph;
     }
 
-    public static EulerianDigraph buildEulerianDigraph(String[] texts) {
-        EulerianDigraph digraph = new EulerianDigraph();
+    public static EulerianDigraph<String> buildEulerianDigraph(String[] texts) {
+        EulerianDigraph<String> digraph = new EulerianDigraph();
 
         for (int i = 0; i < texts.length; i++) {
             digraph.addEdge(prefix(texts[i]), suffix(texts[i]));
+        }
+
+        return digraph;
+    }
+
+    public static EulerianDigraph<KDmer> buildEulerianDigraph(KDmer[] texts) {
+        EulerianDigraph<KDmer> digraph = new EulerianDigraph();
+
+        for (int i = 0; i < texts.length; i++) {
+            digraph.addEdge(texts[i].getPrefix(), texts[i].getSuffix());
         }
 
         return digraph;
@@ -115,6 +122,32 @@ public class SequencesUtil {
         EulerianDigraph digraph = buildEulerianDigraph(texts);
         List<String> parts = digraph.toSymbols(digraph.findPath());
         return stringSpelledGenomePathProblem(parts.toArray(new String[parts.size()]));
+    }
+
+    public static String stringReconstruction(KDmer[] kDmers, int k, int d) {
+        EulerianDigraph<KDmer> digraph = buildEulerianDigraph(kDmers);
+        System.out.println(digraph);
+        List<KDmer> parts = toEdgeSymbols(digraph, digraph.findPath());
+        System.out.println(parts);
+        return stringSpelledGenomePathProblem(parts.toArray(new KDmer[parts.size()]), k, d);
+    }
+
+    public static List toEdgeSymbols(SymbolDigraph digraph, Deque<Integer> vertices) {
+        System.out.println(vertices);
+        List list = new ArrayList();
+        int n = vertices.size();
+        for (int i = 0; i < n - 1; i++) {
+            Object v1 = digraph.getKeys().get(vertices.pop());
+            Object v2 = digraph.getKeys().get(vertices.peek());
+            if (v1 instanceof KDmer && v2 instanceof KDmer) {
+                list.add(new KDmer(((KDmer) v1).getPattern1() + ((KDmer) v2).getPattern1(),
+                        ((KDmer) v1).getPattern2() + ((KDmer) v2).getPattern2()));
+            } else {
+                list.add(v1.toString() + v2.toString());
+            }
+        }
+
+        return list;
     }
 
     public static String stringReconstructionForKUniversal(int k) {

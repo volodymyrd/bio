@@ -77,4 +77,21 @@ public class EulerianDigraphTest {
                 new EulerianDigraph.Edge(2, 0))
                 .collect(Collectors.toSet()), eulerianDigraph.findCycleAsEdge());
     }
+
+    @Test
+    public void faindAllPathesTest() {
+        EulerianDigraph eulerianDigraph = new EulerianDigraph();
+        eulerianDigraph.addEdge(0, 1);
+        eulerianDigraph.addEdge(1, 2);
+        eulerianDigraph.addEdge(1, 2);
+        eulerianDigraph.addEdge(1, 2);
+        eulerianDigraph.addEdge(3, 1);
+        eulerianDigraph.addEdge(4, 1);
+        eulerianDigraph.addEdge(2, 3);
+        eulerianDigraph.addEdge(2, 4);
+        eulerianDigraph.addEdge(2, 5);
+
+        assertEquals(2, eulerianDigraph.findAllPathes().size());
+
+    }
 }

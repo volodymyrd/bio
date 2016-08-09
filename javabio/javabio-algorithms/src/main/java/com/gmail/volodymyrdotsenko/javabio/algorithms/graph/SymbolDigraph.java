@@ -128,7 +128,7 @@ public class SymbolDigraph<T> extends Digraph {
                         s.append(String.format("%s,", keys[w]));
                     }
                     int ind = s.lastIndexOf(",");
-                    if (ind >= 0)
+                    if (ind == s.length() - 1)
                         s.deleteCharAt(ind);
                     s.append(NEWLINE);
                 }
@@ -143,7 +143,7 @@ public class SymbolDigraph<T> extends Digraph {
                         s.append(String.format("%s,", keys[w]));
                     }
                     int ind = s.lastIndexOf(",");
-                    if (ind >= 0)
+                    if (ind == s.length() - 1)
                         s.deleteCharAt(ind);
                     s.append(NEWLINE);
                 }

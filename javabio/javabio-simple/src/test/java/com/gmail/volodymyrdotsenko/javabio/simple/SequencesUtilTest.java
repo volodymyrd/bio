@@ -155,7 +155,12 @@ public class SequencesUtilTest {
 
     //@Test
     public void stringReconstructionForKDmer() {
-        assertEquals("GGCTTACCA",
-                SequencesUtil.stringReconstruction(new String[]{"CTTA", "ACCA", "TACC", "GGCT", "GCTT", "TTAC"}));
+        assertEquals("AGCAGCTGCTGCA",
+                SequencesUtil.stringReconstruction(new KDmer[]{
+                        new KDmer("AG", "AG"), new KDmer("GC", "GC"),
+                        new KDmer("CA", "CT"), new KDmer("AG", "TG"),
+                        new KDmer("GC", "GC"), new KDmer("CT", "CT"),
+                        new KDmer("TG", "TG"), new KDmer("GC", "GC"),
+                        new KDmer("CT", "CA"),}, 2, 1));
     }
 }

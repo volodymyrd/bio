@@ -160,7 +160,8 @@ public class LinkedStack<Item> implements Iterable<Item> {
             stringBuilder.append(iterator.next());
             stringBuilder.append(", ");
         }
-        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length() );
+        if (stringBuilder.length() > 1)
+            stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
         stringBuilder.append("]");
         return stringBuilder.toString();
     }

@@ -52,10 +52,24 @@ public abstract class AbstractGraph implements IGraph {
     public static class Edge {
         private final int v;
         private final int w;
+        private final int degree;
 
         public Edge(int v, int w) {
             this.v = v;
             this.w = w;
+            degree = 1;
+        }
+
+        public Edge(int v, int w, int degree) {
+            this.v = v;
+            this.w = w;
+            this.degree = degree;
+        }
+
+        public Edge(Edge edge) {
+            this.v = edge.v;
+            this.w = edge.w;
+            this.degree = edge.degree;
         }
 
         public int getV() {
@@ -74,14 +88,15 @@ public abstract class AbstractGraph implements IGraph {
             Edge edge = (Edge) o;
 
             if (v != edge.v) return false;
-            return w == edge.w;
-
+            if (w != edge.w) return false;
+            return degree == edge.degree;
         }
 
         @Override
         public int hashCode() {
             int result = v;
             result = 31 * result + w;
+            result = 31 * result + degree;
             return result;
         }
 
@@ -90,6 +105,7 @@ public abstract class AbstractGraph implements IGraph {
             return "Edge{" +
                     "v=" + v +
                     ", w=" + w +
+                    ", degree=" + degree +
                     '}';
         }
     }
