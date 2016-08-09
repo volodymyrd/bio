@@ -30,6 +30,22 @@ public class KDmer implements Comparable<KDmer> {
         return new KDmer(SequencesUtil.prefix(pattern1), SequencesUtil.prefix(pattern2));
     }
 
+    public String getPrefixString1() {
+        return SequencesUtil.prefix(pattern1);
+    }
+
+    public String getPrefixString2() {
+        return SequencesUtil.prefix(pattern2);
+    }
+
+    public String getSuffixString1() {
+        return SequencesUtil.suffix(pattern1);
+    }
+
+    public String getSuffixString2() {
+        return SequencesUtil.suffix(pattern2);
+    }
+
     public KDmer getSuffix() {
         return new KDmer(SequencesUtil.suffix(pattern1), SequencesUtil.suffix(pattern2));
     }

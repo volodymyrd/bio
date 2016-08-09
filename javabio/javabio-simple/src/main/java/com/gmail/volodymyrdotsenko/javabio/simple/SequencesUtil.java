@@ -124,24 +124,53 @@ public class SequencesUtil {
         return stringSpelledGenomePathProblem(parts.toArray(new String[parts.size()]));
     }
 
+    public static String stringSpelledByGappedPatterns(KDmer[] kDmers, int k, int d) {
+        StringBuilder prefixString = new StringBuilder();
+        StringBuilder suffixString = new StringBuilder();
+        for (int i = 0; i < kDmers.length - 1; i++) {
+            prefixString.append(kDmers[i].getPattern1().charAt(0));
+            suffixString.append(kDmers[i].getPattern2().charAt(0));
+        }
+
+        prefixString.append(kDmers[kDmers.length - 1].getPattern1());
+        suffixString.append(kDmers[kDmers.length - 1].getPattern2());
+
+        String suffix1 = prefixString.substring(k + d);
+        String prefix2 = suffixString.substring(0, suffixString.length() - (k + d));
+        String suffix2 = suffixString.substring(suffixString.length() - (k + d));
+
+        if (prefix2.equals(suffix1)) {
+            return prefixString + suffix2;
+        } else
+            return "";
+    }
+
     public static String stringReconstruction(KDmer[] kDmers, int k, int d) {
         EulerianDigraph<KDmer> digraph = buildEulerianDigraph(kDmers);
-        System.out.println(digraph);
-        List<KDmer> parts = toEdgeSymbols(digraph, digraph.findPath());
-        System.out.println(parts);
-        return stringSpelledGenomePathProblem(parts.toArray(new KDmer[parts.size()]), k, d);
+        Set<EulerianDigraph<KDmer>.Path> paths = digraph.findAllPaths();
+        System.out.println("Found paths: " + paths.size());
+        String genome = "";
+        for (EulerianDigraph.Path path : paths) {
+            List<KDmer> patternsList = toEdgeSymbols(digraph, path.getVertices());
+            KDmer[] patterns = patternsList.toArray(new KDmer[patternsList.size()]);
+            genome = stringSpelledByGappedPatterns(patterns, k, d);
+            if (!genome.isEmpty())
+                break;
+        }
+
+        return genome;
     }
 
     public static List toEdgeSymbols(SymbolDigraph digraph, Deque<Integer> vertices) {
-        System.out.println(vertices);
         List list = new ArrayList();
         int n = vertices.size();
         for (int i = 0; i < n - 1; i++) {
             Object v1 = digraph.getKeys().get(vertices.pop());
             Object v2 = digraph.getKeys().get(vertices.peek());
             if (v1 instanceof KDmer && v2 instanceof KDmer) {
-                list.add(new KDmer(((KDmer) v1).getPattern1() + ((KDmer) v2).getPattern1(),
-                        ((KDmer) v1).getPattern2() + ((KDmer) v2).getPattern2()));
+                list.add(new KDmer(((KDmer) v1).getPattern1()
+                        + ((KDmer) v2).getPattern1().charAt(((KDmer) v2).getPattern1().length() - 1),
+                        ((KDmer) v1).getPattern2() + ((KDmer) v2).getPattern2().charAt(((KDmer) v2).getPattern2().length() - 1)));
             } else {
                 list.add(v1.toString() + v2.toString());
             }

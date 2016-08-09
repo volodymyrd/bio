@@ -53,6 +53,36 @@ public class SequencesUtilTest {
     }
 
     @Test
+    public void stringSpelledByGappedPatterns() throws Exception {
+        assertEquals("AGCAGCTGCTGCA",
+                SequencesUtil
+                        .stringSpelledByGappedPatterns(
+                                new KDmer[]{
+                                        new KDmer("AG", "AG"),
+                                        new KDmer("GC", "GC"),
+                                        new KDmer("CA", "CT"),
+                                        new KDmer("AG", "TG"),
+                                        new KDmer("GC", "GC"),
+                                        new KDmer("CT", "CT"),
+                                        new KDmer("TG", "TG"),
+                                        new KDmer("GC", "GC"),
+                                        new KDmer("CT", "CA")}, 2, 1));
+    }
+
+    @Test
+    public void stringSpelledByGappedPatterns2() throws Exception {
+        assertEquals("GACCGAGCGCCGGA",
+                SequencesUtil
+                        .stringSpelledByGappedPatterns(
+                                new KDmer[]{
+                                        new KDmer("GACC", "GCGC"),
+                                        new KDmer("ACCG", "CGCC"),
+                                        new KDmer("CCGA", "GCCG"),
+                                        new KDmer("CGAG", "CCGG"),
+                                        new KDmer("GAGC", "CGGA")}, 4, 2));
+    }
+
+    @Test
     public void stringSpelledGenomePathProblemForBruijn() throws Exception {
         assertEquals("00110",
                 SequencesUtil
@@ -153,7 +183,7 @@ public class SequencesUtilTest {
                 SequencesUtil.stringReconstructionForKUniversal(4));
     }
 
-    //@Test
+    @Test
     public void stringReconstructionForKDmer() {
         assertEquals("AGCAGCTGCTGCA",
                 SequencesUtil.stringReconstruction(new KDmer[]{

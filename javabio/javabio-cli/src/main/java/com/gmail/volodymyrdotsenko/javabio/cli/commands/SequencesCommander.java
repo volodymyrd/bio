@@ -3,6 +3,7 @@ package com.gmail.volodymyrdotsenko.javabio.cli.commands;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.graph.EulerianDigraph;
 import com.gmail.volodymyrdotsenko.javabio.cli.utils.FileUtils;
 import com.gmail.volodymyrdotsenko.javabio.simple.BioJavaUtil;
+import com.gmail.volodymyrdotsenko.javabio.simple.KDmer;
 import com.gmail.volodymyrdotsenko.javabio.simple.SequencesUtil;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
@@ -13,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Volodymyr Dotsenko on 6/20/16.
@@ -247,6 +249,28 @@ public class SequencesCommander extends BaseCommander {
             List<String> list = FileUtils.getListFromFile(kmersFileName);
 
             return SequencesUtil.stringReconstruction(list.toArray(new String[list.size()]));
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+
+            return "";
+        }
+    }
+
+    @CliCommand(value = {"stringReconstructionFromReadPairs"}, help = "Solve the String Reconstruction from Read-Pairs Problem")
+    public String stringReconstructionFromReadPairs(
+            @CliOption(key = {"kmersFileName"}, mandatory = true, help = "File contains a collection of paired k-mers PairedReads")
+                    String kmersFileName,
+            @CliOption(key = {"k"}, help = "Length of k-mer", mandatory = true) Integer k,
+            @CliOption(key = {"d"}, help = "Distance", mandatory = true) Integer d) {
+        try {
+            List<String> list = FileUtils.getListFromFile(kmersFileName);
+
+            List<KDmer> kDmers = list.stream().map(e -> {
+                String[] patterns = e.split("\\|");
+                return new KDmer(patterns[0], patterns[1]);
+            }).collect(Collectors.toList());
+
+            return SequencesUtil.stringReconstruction(kDmers.toArray(new KDmer[kDmers.size()]), k, d);
         } catch (IOException e) {
             LOGGER.severe(e.getMessage());
 
