@@ -91,7 +91,7 @@ public class EulerianDigraphTest {
         eulerianDigraph.addEdge(2, 4);
         eulerianDigraph.addEdge(2, 5);
 
-        assertEquals(2, eulerianDigraph.findAllPathes().size());
+        assertEquals(2, eulerianDigraph.findAllPaths().size());
 
     }
 }

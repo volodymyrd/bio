@@ -103,7 +103,7 @@ public class EulerianDigraph<T> extends SymbolDigraph<T> {
 
     private Integer fictiveVertex;
 
-    public Set<Path> findAllPathes() {
+    public Set<Path> findAllPaths() {
         return findAllCycles(faindPathInit());
     }
 
@@ -222,10 +222,10 @@ public class EulerianDigraph<T> extends SymbolDigraph<T> {
             throw new IllegalStateException("Graph is not Eulerian");
         }
 
-        List<Path> pathes = new ArrayList<>();
+        List<Path> paths = new ArrayList<>();
 
         Path path = new Path();
-        pathes.add(path);
+        paths.add(path);
 
         BreadthIterator breadthIterator = new BreadthIterator();
         if (!breadthIterator.hasNext())
@@ -237,14 +237,14 @@ public class EulerianDigraph<T> extends SymbolDigraph<T> {
 
         for (; ; ) {
             boolean finished = true;
-            ListIterator<Path> iterator = pathes.listIterator();
+            ListIterator<Path> iterator = paths.listIterator();
             while (iterator.hasNext()) {
                 Path p = iterator.next();
 
                 switch (p.status) {
                     case NEW:
                         finished = false;
-                        go(p, iterator, pathes);
+                        go(p, iterator, paths);
                         break;
                     case SUCCESS:
                         break;
@@ -256,10 +256,10 @@ public class EulerianDigraph<T> extends SymbolDigraph<T> {
                 break;
         }
 
-        return new HashSet<>(pathes);
+        return new HashSet<>(paths);
     }
 
-    private void go(Path path, ListIterator<Path> pathesIterator, List<Path> pathes) {
+    private void go(Path path, ListIterator<Path> pathsIterator, List<Path> paths) {
         while (!path.stack.isEmpty()) {
             int v = path.stack.peek();
             Set<Edge> deleted = path.deletedEdges.get(v);
@@ -297,9 +297,9 @@ public class EulerianDigraph<T> extends SymbolDigraph<T> {
                             if (!dublicatedEdge) {
                                 Path altPath = new Path(altPathTmp);
                                 altPath.stack.push(w);
-                                if (!pathes.contains(altPath)) {
+                                if (!paths.contains(altPath)) {
                                     altPath.deletedEdges.get(v).add(edge);
-                                    pathesIterator.add(altPath);
+                                    pathsIterator.add(altPath);
                                 }
                             }
                         }
