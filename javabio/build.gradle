@@ -8,7 +8,7 @@ subprojects {
                 log4j       : '1.2.17',
                 spring_shell: '1.2.0.M1',
                 apache_math3: '3.6.1',
-                biojava     : '4.2.1'
+                biojava     : '4.2.4'
         ]
 
         libs = [:]
@@ -23,7 +23,11 @@ subprojects {
 
         libs.apache_math3 = ["org.apache.commons:commons-math3:${versions.apache_math3}"]
 
-        libs.biojava = ["org.biojava:biojava-core:${versions.biojava}"]
+        libs.biojava = "org.biojava:biojava-core:${versions.biojava}"
+        libs.biojava_1 = "org.biojava:core:1.9.2"
+        libs.biojava_sequencing = "org.biojava:biojava-sequencing:${versions.biojava}"
+        libs.biojava_structure = "org.biojava:biojava-structure:${versions.biojava}"
+        libs.biojava_alignment = "org.biojava:biojava-alignment:${versions.biojava}"
     }
 
     // Configuring java
