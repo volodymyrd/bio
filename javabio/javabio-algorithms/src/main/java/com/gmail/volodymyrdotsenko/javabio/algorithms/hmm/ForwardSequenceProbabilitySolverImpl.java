@@ -20,7 +20,7 @@ public class ForwardSequenceProbabilitySolverImpl<TQ, TO> implements SequencePro
         for (int t = 1; t < hmm.getT(); t++) {
             for (int i = 0; i < hmm.getN(); i++) {
                 for (int j = 0; j < hmm.getN(); j++) {
-                    alphaArray[i][t] += hmm.getA()[i][j] * alphaArray[i][t - 1];
+                    alphaArray[i][t] += hmm.getA()[i][j] * alphaArray[j][t - 1];
                 }
                 alphaArray[i][t] *= hmm.getB()[i][hmm.getPossibleObservationIndexByName(hmm.getO()[t])];
             }
