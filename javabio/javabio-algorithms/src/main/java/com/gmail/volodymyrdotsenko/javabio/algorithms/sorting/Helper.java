@@ -15,7 +15,7 @@ class Helper {
     }
 
     // is v < w ?
-    static <T, C extends Comparator<T>> boolean less(C comparator, T v, T w) {
+    static <T> boolean less(T v, T w, Comparator<T> comparator) {
         return comparator.compare(v, w) < 0;
     }
 
@@ -39,14 +39,14 @@ class Helper {
     }
 
     // is the array a[] sorted?
-    static <T, C extends Comparator<T>> boolean isSorted(T[] a, C comparator) {
+    static <T> boolean isSorted(T[] a, Comparator<T> comparator) {
         return isSorted(a, comparator, 0, a.length - 1);
     }
 
     // is the array sorted from a[lo] to a[hi]
-    static <T, C extends Comparator<T>> boolean isSorted(T[] a, C comparator, int lo, int hi) {
+    static <T> boolean isSorted(T[] a, Comparator<T> comparator, int lo, int hi) {
         for (int i = lo + 1; i <= hi; i++)
-            if (less(comparator, a[i], a[i-1])) return false;
+            if (less(a[i], a[i-1], comparator)) return false;
         return true;
     }
 }

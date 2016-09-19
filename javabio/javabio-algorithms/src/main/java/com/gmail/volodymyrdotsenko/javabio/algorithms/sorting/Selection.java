@@ -40,12 +40,12 @@ public class Selection {
      * @param a          the array
      * @param comparator the comparator specifying the order
      */
-    public static <T, C extends Comparator<T>> void sort(T[] a, C comparator) {
+    public static <T> void sort(T[] a, Comparator<T> comparator) {
         int n = a.length;
         for (int i = 0; i < n; i++) {
             int min = i;
             for (int j = i + 1; j < n; j++) {
-                if (Helper.less(comparator, a[j], a[min])) {
+                if (Helper.less(a[j], a[min], comparator)) {
                     min = j;
                 }
             }
