@@ -18,6 +18,14 @@ public class ShellTest {
     private final Random random = new Random();
 
     @Test
+    public void demo() {
+        Integer[] integers = new Integer[]{61, 109, 149, 111, 34, 2, 24, 119, 122, 125, 27, 145};
+        assertFalse(Helper.isSorted(integers));
+        Shell.sort(integers);
+        assertTrue(Helper.isSorted(integers));
+    }
+
+    @Test
     public void shouldSortAnyInteger() {
         Integer[] integers = new Integer[size];
         for (int i = 0; i < size; i++) {
