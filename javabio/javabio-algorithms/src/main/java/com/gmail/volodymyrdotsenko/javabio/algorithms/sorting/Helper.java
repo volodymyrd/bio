@@ -1,6 +1,8 @@
 package com.gmail.volodymyrdotsenko.javabio.algorithms.sorting;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Useful methods for sorting
@@ -10,7 +12,7 @@ import java.util.Comparator;
 class Helper {
 
     // is v < w ?
-    static <T extends Comparable<T>>  boolean less(T v, T w) {
+    static <T extends Comparable<T>> boolean less(T v, T w) {
         return v.compareTo(w) < 0;
     }
 
@@ -33,8 +35,11 @@ class Helper {
 
     // is the array sorted from a[lo] to a[hi]
     static <T extends Comparable<T>> boolean isSorted(T[] a, int lo, int hi) {
-        for (int i = lo + 1; i <= hi; i++)
-            if (less(a[i], a[i-1])) return false;
+        for (int i = lo + 1; i <= hi; i++) {
+            if (less(a[i], a[i - 1])) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -45,8 +50,28 @@ class Helper {
 
     // is the array sorted from a[lo] to a[hi]
     static <T> boolean isSorted(T[] a, Comparator<T> comparator, int lo, int hi) {
-        for (int i = lo + 1; i <= hi; i++)
-            if (less(a[i], a[i-1], comparator)) return false;
+        for (int i = lo + 1; i <= hi; i++) {
+            if (less(a[i], a[i - 1], comparator)) {
+                return false;
+            }
+        }
         return true;
+    }
+
+    static <T extends Comparable<T>> List<T> merge(List<T> left, List<T> right) {
+        List<T> merged = new ArrayList<T>(left.size() + right.size());
+        int leftPos = 0;
+        int rightPos = 0;
+
+        while (leftPos < left.size() || rightPos < right.size()) {
+            if (leftPos < left.size() && rightPos < right.size()
+                && left.get(leftPos).compareTo(right.get(rightPos)) < 0 ||
+                rightPos >= right.size() && leftPos < left.size()) {
+                merged.add(left.get(leftPos++));
+            } else if (rightPos < right.size()) {
+                merged.add(right.get(rightPos++));
+            }
+        }
+        return merged;
     }
 }
