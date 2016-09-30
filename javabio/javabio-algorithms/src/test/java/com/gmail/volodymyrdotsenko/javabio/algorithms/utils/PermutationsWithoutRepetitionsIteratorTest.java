@@ -1,23 +1,20 @@
 package com.gmail.volodymyrdotsenko.javabio.algorithms.utils;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertArrayEquals;
-
 /**
- * Created by Volodymyr Dotsenko on 8/14/16.
+ * Created by Volodymyr_Dotsenko on 9/30/2016.
  */
-public class PermutationsWithRepetitionsIteratorTest {
-
+public class PermutationsWithoutRepetitionsIteratorTest {
     @Test
     public void shouldCreatePermutations() {
-        char[] symbols = {'A', 'B'};
+        int[][] result = new int[6][];
 
-        int[][] result = new int[4][];
-
-        PermutationsWithRepetitionsIterator iterator = new PermutationsWithRepetitionsIterator(2, 2);
+        PermutationsWithoutRepetitionsIterator iterator = new PermutationsWithoutRepetitionsIterator(4, 2);
         int i = 0;
         while (iterator.hasNext()) {
             int[] temp = iterator.next();
