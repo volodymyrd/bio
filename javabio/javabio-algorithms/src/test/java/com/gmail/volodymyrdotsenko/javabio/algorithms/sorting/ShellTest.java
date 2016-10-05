@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import java.util.Comparator;
 import java.util.Random;
 import java.util.UUID;
 
