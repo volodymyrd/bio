@@ -10,7 +10,7 @@ import java.util.Arrays;
  * Created by Volodymyr_Dotsenko on 9/30/2016.
  */
 public class PermutationsWithoutRepetitionsIteratorTest {
-    @Test
+    //@Test
     public void shouldCreatePermutations() {
         int[][] result = new int[6][];
 
