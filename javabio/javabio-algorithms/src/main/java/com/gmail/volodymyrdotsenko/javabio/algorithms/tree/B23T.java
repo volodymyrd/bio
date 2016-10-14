@@ -1,6 +1,7 @@
 package com.gmail.volodymyrdotsenko.javabio.algorithms.tree;
 
-import java.util.Arrays;
+import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedQueue;
+
 import java.util.Iterator;
 
 /**
@@ -100,6 +101,34 @@ public class B23T<Key extends Comparable<Key>, Value> {
     }
 
     /**
+     * Returns true if this symbol table is empty.
+     *
+     * @return {@code true} if this symbol table is empty; {@code false} otherwise
+     */
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    /**
+     * Returns the number of key-value pairs in this symbol table.
+     *
+     * @return the number of key-value pairs in this symbol table
+     */
+    public int size() {
+        return size;
+    }
+
+    // return number of key-value pairs in BST rooted at x
+    private int size(Node x) {
+        if (x == null) {
+            return 0;
+        } else {
+            return x.size;
+        }
+    }
+
+
+    /**
      * Inserts the specified key-value pair into the symbol table, overwriting the old
      * value with the new value if the symbol table already contains the specified key.
      * Deletes the specified key (and its associated value) from this symbol table
@@ -120,6 +149,8 @@ public class B23T<Key extends Comparable<Key>, Value> {
         root = put(root, key, val);
     }
 
+    private int size;
+
     private Node put(Node x, Key key, Value val) {
         if (x == null) {
             return new Node(key, val);
@@ -135,7 +166,9 @@ public class B23T<Key extends Comparable<Key>, Value> {
             put(x.third, key, val);
         }
 
-        return split(x);
+        Node y = split(x);
+
+        return y;
     }
 
     private Node split(Node n) {
@@ -202,6 +235,7 @@ public class B23T<Key extends Comparable<Key>, Value> {
         private Node next = root;
         private int currenLevel = 0;
         private int nextLevel = 0;
+        private LinkedQueue<Node> queue = new LinkedQueue<>();
 
         @Override
         public boolean hasNext() {
@@ -216,13 +250,15 @@ public class B23T<Key extends Comparable<Key>, Value> {
 
             if (currentNode.parent != null) {
                 if (allVisited(currentNode.parent)) {
-                    next = getNext(currentNode);
+                    next = getNext(queue.dequeue());
                     nextLevel++;
                 } else {
                     next = getNext(currentNode.parent);
+                    queue.enqueue(next);
                 }
             } else {
                 next = getNext(currentNode);
+                queue.enqueue(next);
                 nextLevel++;
             }
 
@@ -231,10 +267,10 @@ public class B23T<Key extends Comparable<Key>, Value> {
 
         private boolean allVisited(Node node) {
             return
-                (node.first == null || node.first.visited) &&
-                (node.second == null || node.second.visited) &&
-                (node.third == null || node.third.visited) &&
-                (node.fourth == null || node.fourth.visited);
+                    (node.first == null || node.first.visited) &&
+                            (node.second == null || node.second.visited) &&
+                            (node.third == null || node.third.visited) &&
+                            (node.fourth == null || node.fourth.visited);
         }
 
         private Node getNext(Node current) {
@@ -254,6 +290,7 @@ public class B23T<Key extends Comparable<Key>, Value> {
 
     public String print() {
         StringBuilder builder = new StringBuilder();
+        builder.append("Tree size: " + size());
         BreadthFirstIterator iterator = new BreadthFirstIterator();
         int level = 0;
         StringBuilder levelBuilder = new StringBuilder();
