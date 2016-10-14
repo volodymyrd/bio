@@ -7,13 +7,13 @@ import java.util.Iterator;
 /**
  * Created by Volodymyr_Dotsenko on 10/13/2016.
  */
-public class B23T<Key extends Comparable<Key>, Value> {
+public class B23T<Key extends Comparable<Key>, Value> extends AbstractTree<Key, Value> {
 
     private final static int ORDER = 3;
 
     private Node root; // root
 
-    private class Node {
+    private class Node implements INode {
 
         private final Object[] keys = new Object[ORDER]; // sorted by key
         private final Object[] vals = new Object[ORDER];
@@ -99,6 +99,21 @@ public class B23T<Key extends Comparable<Key>, Value> {
             }
             return "{" + builder.toString() + '}';
         }
+
+        @Override
+        public int getLevel() {
+            return level;
+        }
+
+        @Override
+        public void setLevel(int level) {
+            this.level = level;
+        }
+
+        @Override
+        public void setVisited(boolean flag) {
+            this.visited = flag;
+        }
     }
 
     /**
@@ -117,15 +132,6 @@ public class B23T<Key extends Comparable<Key>, Value> {
      */
     public int size() {
         return size;
-    }
-
-    // return number of key-value pairs in BST rooted at x
-    private int size(Node x) {
-        if (x == null) {
-            return 0;
-        } else {
-            return x.size;
-        }
     }
 
 
@@ -154,11 +160,13 @@ public class B23T<Key extends Comparable<Key>, Value> {
 
     private Node put(Node x, Key key, Value val) {
         if (x == null) {
+            size++;
             return new Node(key, val);
         }
 
         if (x.isLeaf()) {
             x.put(key, val);
+            size++;
         } else if (key.compareTo((Key) x.keys[0]) <= 0) {
             put(x.first, key, val);
         } else if ((x.size == 1) || ((x.size == 2) && key.compareTo((Key) x.keys[1]) <= 0)) {
@@ -231,9 +239,14 @@ public class B23T<Key extends Comparable<Key>, Value> {
         }
     }
 
-    private class BreadthFirstIterator implements Iterator<Node> {
+    @Override
+    protected Iterator<INode> breadthFirstIterator() {
+        return new BreadthFirstIterator();
+    }
 
-        private LinkedQueue<Node> queue = new LinkedQueue<>();
+    private class BreadthFirstIterator implements Iterator<INode> {
+
+        private LinkedQueue<INode> queue = new LinkedQueue<>();
 
         public BreadthFirstIterator() {
             root.level = 0;
@@ -248,7 +261,7 @@ public class B23T<Key extends Comparable<Key>, Value> {
 
         @Override
         public Node next() {
-            Node next = queue.dequeue();
+            Node next = (Node) queue.dequeue();
             int currentLevel = next.level;
             int nextLevel = ++currentLevel;
             if (next.first != null && !next.first.visited) {
@@ -265,35 +278,5 @@ public class B23T<Key extends Comparable<Key>, Value> {
             }
             return next;
         }
-    }
-
-    private Node setLevelAndVisited(Node node, int level) {
-        node.level = level;
-        node.visited = true;
-        return node;
-    }
-
-    public String print() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Tree size: " + size());
-        BreadthFirstIterator iterator = new BreadthFirstIterator();
-        int level = 0;
-        StringBuilder levelBuilder = new StringBuilder();
-        while (iterator.hasNext()) {
-            Node node = iterator.next();
-            if (node.level == level) {
-                levelBuilder.append(" " + node);
-            } else {
-                level = node.level;
-                builder.append("\r\n");
-                builder.append(levelBuilder);
-
-                levelBuilder = new StringBuilder();
-                levelBuilder.append(" " + node);
-            }
-        }
-        builder.append("\r\n");
-        builder.append(levelBuilder);
-        return builder.toString();
     }
 }

@@ -42,6 +42,6 @@ public class BSTTest {
 
     @Test
     public void shouldPrintTree() {
-        System.out.println(fiveDisBalance.print());
+        System.out.println(five.print());
     }
 }

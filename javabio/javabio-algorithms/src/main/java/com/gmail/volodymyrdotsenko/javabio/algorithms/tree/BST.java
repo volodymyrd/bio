@@ -1,5 +1,6 @@
 package com.gmail.volodymyrdotsenko.javabio.algorithms.tree;
 
+import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.LinkedQueue;
 import com.gmail.volodymyrdotsenko.javabio.algorithms.collections.ResizingArrayStack;
 
 import java.util.Iterator;
@@ -25,35 +26,18 @@ import java.util.NoSuchElementException;
  * @author Robert Sedgewick
  * @author Kevin Wayne
  */
-public class BST<Key extends Comparable<Key>, Value> {
+public class BST<Key extends Comparable<Key>, Value> extends AbstractTree<Key, Value> {
 
     private Node root; // root of BST
 
-    public class PublicNode {
-
-        public final Key key; // sorted by key
-        public final int level;
-        public final Value value;
-
-        public PublicNode(Key key, int level, Value value) {
-            this.key = key;
-            this.level = level;
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return value.toString();
-        }
-    }
-
-    private class Node {
+    private class Node implements INode {
 
         private final Key key; // sorted by key
         private Value val; // associated data
         private Node left, right; // left and right subtrees
         private int size; // number of nodes in subtree
         private boolean visited;//flag for marking a visited node while traversal the tree
+        private int level;//for root node level 0, children of root - level 1, etc.
 
         public Node(Key key, Value val, int size) {
             this.key = key;
@@ -78,6 +62,28 @@ public class BST<Key extends Comparable<Key>, Value> {
         @Override
         public int hashCode() {
             return key.hashCode();
+        }
+
+        @Override
+        public int getLevel() {
+            return level;
+        }
+
+        @Override
+        public void setLevel(int level) {
+            this.level = level;
+        }
+
+        @Override
+        public void setVisited(boolean flag) {
+            this.visited = flag;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append(val);
+            return "{" + builder.toString() + '}';
         }
     }
 
@@ -274,61 +280,38 @@ public class BST<Key extends Comparable<Key>, Value> {
         return x;
     }
 
-    public Iterator<PublicNode> iterator() {
+    @Override
+    protected Iterator<INode> breadthFirstIterator() {
         return new BreadthFirstIterator();
     }
 
-    private class BreadthFirstIterator implements Iterator<PublicNode> {
+    private class BreadthFirstIterator implements Iterator<INode> {
 
-        private Node next = root;
-        private Node parent = root;
-        private int level = 0;
+        private LinkedQueue<INode> queue = new LinkedQueue<>();
 
-        @Override
-        public boolean hasNext() {
-            return next != null;
+        public BreadthFirstIterator() {
+            root.level = 0;
+            root.visited = true;
+            queue.enqueue(root);
         }
 
         @Override
-        public PublicNode next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
+        public boolean hasNext() {
+            return !queue.isEmpty();
+        }
+
+        @Override
+        public Node next() {
+            Node next = (Node) queue.dequeue();
+            int currentLevel = next.level;
+            int nextLevel = ++currentLevel;
+            if (next.left != null && !next.left.visited) {
+                queue.enqueue(setLevelAndVisited(next.left, nextLevel));
             }
-
-            Node current = next;
-            int currentLevel = level;
-            current.visited = true;
-
-            if (current.equals(root)) {
-                level++;
+            if (next.right != null && !next.right.visited) {
+                queue.enqueue(setLevelAndVisited(next.right, nextLevel));
             }
-
-            if (parent.left != null && !parent.left.visited) {
-                next = parent.left;
-            } else if (parent.right != null && !parent.right.visited) {
-                next = parent.right;
-            } else {
-                level++;
-                if (parent.left != null && (parent.left.left != null || parent.left.right != null)) {
-                    if (parent.left.left != null) {
-                        next = parent.left.left;
-                    } else {
-                        next = parent.left.right;
-                    }
-                    parent = parent.left;
-                } else if (parent.right != null && (parent.right.left != null || parent.right.right != null)) {
-                    if (parent.right.left != null) {
-                        next = parent.right.left;
-                    } else {
-                        next = parent.right.right;
-                    }
-                    parent = parent.right;
-                } else {
-                    next = null;
-                }
-            }
-
-            return new PublicNode(current.key, currentLevel, current.val);
+            return next;
         }
     }
 
@@ -352,27 +335,4 @@ public class BST<Key extends Comparable<Key>, Value> {
         }
     }
 
-    public String print() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Tree size: " + size());
-        BreadthFirstIterator iterator = new BreadthFirstIterator();
-        int level = 0;
-        StringBuilder levelBuilder = new StringBuilder();
-        while (iterator.hasNext()) {
-            PublicNode node = iterator.next();
-            if (node.level == level) {
-                levelBuilder.append(" " + node);
-            } else {
-                level = node.level;
-                builder.append("\r\n");
-                builder.append(levelBuilder);
-
-                levelBuilder = new StringBuilder();
-                levelBuilder.append(" " + node);
-            }
-        }
-        builder.append("\r\n");
-        builder.append(levelBuilder);
-        return builder.toString();
-    }
 }
