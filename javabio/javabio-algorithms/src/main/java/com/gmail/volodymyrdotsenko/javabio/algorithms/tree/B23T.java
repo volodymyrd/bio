@@ -21,6 +21,7 @@ public class B23T<Key extends Comparable<Key>, Value> {
         private Node first, second, third, fourth;
         private int size; // number of taken keys
         private boolean visited;//flag for marking a visited node while traversal the tree
+        private int level;//for root node level 0, children of root - level 1, etc.
         private Node parent;
 
         public Node(Key key, Value val) {
@@ -232,60 +233,44 @@ public class B23T<Key extends Comparable<Key>, Value> {
 
     private class BreadthFirstIterator implements Iterator<Node> {
 
-        private Node next = root;
-        private int currenLevel = 0;
-        private int nextLevel = 0;
         private LinkedQueue<Node> queue = new LinkedQueue<>();
+
+        public BreadthFirstIterator() {
+            root.level = 0;
+            root.visited = true;
+            queue.enqueue(root);
+        }
 
         @Override
         public boolean hasNext() {
-            return next != null;
+            return !queue.isEmpty();
         }
 
         @Override
         public Node next() {
-            Node currentNode = next;
-            currentNode.visited = true;
-            currenLevel = nextLevel;
-
-            if (currentNode.parent != null) {
-                if (allVisited(currentNode.parent)) {
-                    next = getNext(queue.dequeue());
-                    nextLevel++;
-                } else {
-                    next = getNext(currentNode.parent);
-                    queue.enqueue(next);
-                }
-            } else {
-                next = getNext(currentNode);
-                queue.enqueue(next);
-                nextLevel++;
+            Node next = queue.dequeue();
+            int currentLevel = next.level;
+            int nextLevel = ++currentLevel;
+            if (next.first != null && !next.first.visited) {
+                queue.enqueue(setLevelAndVisited(next.first, nextLevel));
             }
-
-            return currentNode;
-        }
-
-        private boolean allVisited(Node node) {
-            return
-                    (node.first == null || node.first.visited) &&
-                            (node.second == null || node.second.visited) &&
-                            (node.third == null || node.third.visited) &&
-                            (node.fourth == null || node.fourth.visited);
-        }
-
-        private Node getNext(Node current) {
-            if (current.first != null && !current.first.visited) {
-                return current.first;
-            } else if (current.second != null && !current.second.visited) {
-                return current.second;
-            } else if (current.third != null && !current.third.visited) {
-                return current.third;
-            } else if (current.fourth != null && !current.fourth.visited) {
-                return current.fourth;
-            } else {
-                return null;
+            if (next.second != null && !next.second.visited) {
+                queue.enqueue(setLevelAndVisited(next.second, nextLevel));
             }
+            if (next.third != null && !next.third.visited) {
+                queue.enqueue(setLevelAndVisited(next.third, nextLevel));
+            }
+            if (next.fourth != null && !next.fourth.visited) {
+                queue.enqueue(setLevelAndVisited(next.fourth, nextLevel));
+            }
+            return next;
         }
+    }
+
+    private Node setLevelAndVisited(Node node, int level) {
+        node.level = level;
+        node.visited = true;
+        return node;
     }
 
     public String print() {
@@ -296,10 +281,10 @@ public class B23T<Key extends Comparable<Key>, Value> {
         StringBuilder levelBuilder = new StringBuilder();
         while (iterator.hasNext()) {
             Node node = iterator.next();
-            if (iterator.currenLevel == level) {
+            if (node.level == level) {
                 levelBuilder.append(" " + node);
             } else {
-                level = iterator.currenLevel;
+                level = node.level;
                 builder.append("\r\n");
                 builder.append(levelBuilder);
 
