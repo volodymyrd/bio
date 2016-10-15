@@ -90,6 +90,10 @@ public class B23T<Key extends Comparable<Key>, Value> extends AbstractTree<Key, 
             for (int i = 0; i < ORDER; i++) {
                 if (vals[i] != null) {
                     builder.append(vals[i]);
+                    if(parent != null)
+                        builder.append(parent);
+                    else
+                        builder.append("");
                     builder.append(",");
                 }
             }

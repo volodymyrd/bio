@@ -80,6 +80,11 @@ public class RBT<K extends Comparable<K>, V> extends AbstractTree<K, V> {
         public String toString() {
             StringBuilder builder = new StringBuilder();
             builder.append(value);
+            if(parent != null)
+                builder.append(parent);
+            else
+                builder.append("");
+
             return "{" + builder.toString() + '}';
         }
     }
