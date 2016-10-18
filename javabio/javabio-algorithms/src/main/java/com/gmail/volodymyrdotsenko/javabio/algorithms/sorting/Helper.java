@@ -9,32 +9,32 @@ import java.util.List;
  *
  * Created by Volodymyr_Dotsenko on 9/19/2016.
  */
-class Helper {
+public class Helper {
 
     // is v < w ?
-    static <T extends Comparable<T>> boolean less(T v, T w) {
+    public static <T extends Comparable<T>> boolean less(T v, T w) {
         return v.compareTo(w) < 0;
     }
 
     // is v < w ?
-    static <T> boolean less(T v, T w, Comparator<T> comparator) {
+    public static <T> boolean less(T v, T w, Comparator<T> comparator) {
         return comparator.compare(v, w) < 0;
     }
 
     // exchange a[i] and a[j]
-    static <T> void exchange(T[] a, int i, int j) {
+    public static <T> void exchange(T[] a, int i, int j) {
         T swap = a[i];
         a[i] = a[j];
         a[j] = swap;
     }
 
     // is the array a[] sorted?
-    static <T extends Comparable<T>> boolean isSorted(T[] a) {
+    public static <T extends Comparable<T>> boolean isSorted(T[] a) {
         return isSorted(a, 0, a.length - 1);
     }
 
     // is the array sorted from a[lo] to a[hi]
-    static <T extends Comparable<T>> boolean isSorted(T[] a, int lo, int hi) {
+    public static <T extends Comparable<T>> boolean isSorted(T[] a, int lo, int hi) {
         for (int i = lo + 1; i <= hi; i++) {
             if (less(a[i], a[i - 1])) {
                 return false;
@@ -44,12 +44,12 @@ class Helper {
     }
 
     // is the array a[] sorted?
-    static <T> boolean isSorted(T[] a, Comparator<T> comparator) {
+    public static <T> boolean isSorted(T[] a, Comparator<T> comparator) {
         return isSorted(a, comparator, 0, a.length - 1);
     }
 
     // is the array sorted from a[lo] to a[hi]
-    static <T> boolean isSorted(T[] a, Comparator<T> comparator, int lo, int hi) {
+    public static <T> boolean isSorted(T[] a, Comparator<T> comparator, int lo, int hi) {
         for (int i = lo + 1; i <= hi; i++) {
             if (less(a[i], a[i - 1], comparator)) {
                 return false;
@@ -58,7 +58,7 @@ class Helper {
         return true;
     }
 
-    static <T extends Comparable<T>> List<T> merge(List<T> left, List<T> right) {
+    public static <T extends Comparable<T>> List<T> merge(List<T> left, List<T> right) {
         List<T> merged = new ArrayList<T>(left.size() + right.size());
         int leftPos = 0;
         int rightPos = 0;
@@ -73,5 +73,42 @@ class Helper {
             }
         }
         return merged;
+    }
+
+    // partition the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi]
+    // and return the index j.
+    public static <T extends Comparable<T>> int partition(T[] a, int lo, int hi) {
+        int i = lo;
+        int j = hi + 1;
+        T v = a[lo];
+        while (true) {
+
+            // find item on lo to swap
+            while (less(a[++i], v)) {
+                if (i == hi) {
+                    break;
+                }
+            }
+
+            // find item on hi to swap
+            while (less(v, a[--j])) {
+                if (j == lo) {
+                    break;      // redundant since a[lo] acts as sentinel
+                }
+            }
+
+            // check if pointers cross
+            if (i >= j) {
+                break;
+            }
+
+            exchange(a, i, j);
+        }
+
+        // put partitioning item v at a[j]
+        exchange(a, lo, j);
+
+        // now, a[lo .. j-1] <= a[j] <= a[j+1 .. hi]
+        return j;
     }
 }

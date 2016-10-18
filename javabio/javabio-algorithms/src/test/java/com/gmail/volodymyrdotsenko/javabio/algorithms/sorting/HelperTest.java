@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,6 +13,15 @@ import java.util.stream.Stream;
  * Created by Volodymyr_Dotsenko on 9/28/2016.
  */
 public class HelperTest {
+
+    @Test
+    public void partition() {
+        // partition the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi]
+        // and return the index j.
+        Integer[] a = new Integer[]{12, 25, 10, 100, -11, 17, 15, 1, 99};
+        System.out.println(Helper.partition(a, 0, a.length - 1));
+        System.out.println(Arrays.toString(a));
+    }
 
     @Test
     public void shouldMerge1() throws Exception {
