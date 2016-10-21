@@ -54,4 +54,34 @@ public class HelperTest {
 
         assertEquals(Stream.of(1, 2, 3, 5, 6, 7, 10).collect(Collectors.toList()), Helper.merge(list1, list2));
     }
+
+    @Test
+    public void shouldCopyArraysOfInteger() {
+        Integer[] a1 = new Integer[]{1, 2, 3};
+        Integer[] a2 = new Integer[]{4, 5};
+        Integer[] a3 = new Integer[]{6, 7, 8, 9};
+        Integer[] a4 = new Integer[]{10};
+
+        assertArrayEquals(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+                          Helper.copyArraysToNewArray(a1, a2, a3, a4));
+    }
+
+    @Test
+    public void shouldCopyArraysOfString() {
+        String[] a1 = new String[]{"1", "2", "3"};
+        String[] a2 = new String[]{};
+        String[] a3 = new String[]{"4", "5"};
+        String[] a4 = new String[]{"6", "7", "8", "9"};
+        String[] a5 = new String[]{"10"};
+
+        assertArrayEquals(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"},
+                          Helper.copyArraysToNewArray(a1, a2, a3, a4, a5));
+    }
+
+    @Test
+    public void shouldMergeStringArrays() {
+        String[] a = new String[]{"A", "G", "L", "O", "R", "H", "I", "M", "S", "T"};
+        Helper.merge(a, 0, 4, a.length - 1);
+        System.out.println(Arrays.toString(a));
+    }
 }

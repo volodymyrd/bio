@@ -1,6 +1,8 @@
 package com.gmail.volodymyrdotsenko.javabio.algorithms.sorting;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -73,6 +75,48 @@ public class Helper {
             }
         }
         return merged;
+    }
+
+    public static <T extends Comparable<T>> void merge(T[] a, int lo, int mid, int hi) {
+        Class<T[]> type = (Class<T[]>) a.getClass();
+        T[] copy = (T[]) Array.newInstance(type.getComponentType(), a.length);
+        System.arraycopy(a, lo, copy, lo, hi - lo + 1);
+
+        int i = lo;
+        int j = mid + 1;
+        for (int k = lo; k <= hi; k++) {
+            if (i > mid) {
+                a[k] = copy[j++];
+            } else if (j > hi) {
+                a[k] = copy[i++];
+            } else if (less(copy[j], copy[i])) {
+                a[k] = copy[j++];
+            } else {
+                a[k] = copy[i++];
+            }
+        }
+    }
+
+    static <T> T[] copyArraysToNewArray(T[]... arrays) {
+        if (arrays == null || arrays.length == 0) {
+            throw new IllegalArgumentException("Parameter 'arrays' must be set");
+        }
+        int newLength = 0;
+        for (int i = 0; i < arrays.length; i++) {
+            newLength += arrays[i].length;
+        }
+
+        Class<T[]> type = (Class<T[]>) arrays[0].getClass();
+
+        T[] copy = (T[]) Array.newInstance(type.getComponentType(), newLength);
+
+        int pos = 0;
+        for (int i = 0; i < arrays.length; i++) {
+            System.arraycopy(arrays[i], 0, copy, pos, arrays[i].length);
+            pos += arrays[i].length;
+        }
+
+        return copy;
     }
 
     // partition the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi]
